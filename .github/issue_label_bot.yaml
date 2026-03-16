@@ -1,0 +1,5 @@
+issue_label_bot:
+  label_aliases:
+    feature_request: feature
+    bug: bug
+    question: question
