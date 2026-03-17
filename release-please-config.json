@@ -11,7 +11,8 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "component": "",
+      "package-name": "@transf-orm/cli",
+      "component": "transf-orm-cli",
       "extra-files": [
         {
           "type": "toml",
