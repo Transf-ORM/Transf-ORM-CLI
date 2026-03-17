@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    if: github.repository == 'nitrached/Cod3x'
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]

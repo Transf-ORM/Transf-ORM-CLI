@@ -15,7 +15,7 @@ env:
 
 jobs:
   audit:
-    if: github.repository == 'nitrached/Cod3x'
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
         run: cargo audit
 
   gitleaks:
-    if: github.repository == 'nitrached/Cod3x'
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
