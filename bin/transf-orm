@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
-DIR=$(dirname "$0")
-"$DIR/../target/release/transf-orm-cli" "$@"
+set -euo pipefail
+
+# Resolve the real script path because npm runs bins through node_modules/.bin symlinks.
+SCRIPT_PATH="$(readlink -f "$0")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+BIN_PATH="$SCRIPT_DIR/../target/release/transf-orm-cli"
+
+exec "$BIN_PATH" "$@"
