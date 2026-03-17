@@ -1,0 +1,15 @@
+{
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "version-file": "package.json",
+      "extra-files": [
+        "Cargo.toml"
+      ]
+    }
+  },
+  "release-type": "node",
+  "bump-minor-pre-major": false,
+  "bump-patch-for-minor-pre-major": false,
+  "prerelease": false
+}
