@@ -1,11 +1,11 @@
 name: Mirroring
 on:
-  push:
-    branches:
-      - '**'
   pull_request:
     branches:
       - '**'
+
+  # Runs on wiki updates
+  gollum:
 
 env:
   MIRROR_URL: git@github.com:EpitechPGE3-2025/G-EIP-600-REN-6-1-eip-5.git
@@ -22,3 +22,23 @@ jobs:
         with:
           target_repo_url: ${{env.MIRROR_URL}}
           ssh_private_key: ${{secrets.MIRROR_SSH_KEY}}
+
+  synchronize-wiki:
+    name: Synchronize Wiki
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI' && github.event_name == 'gollum'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup SSH key
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.MIRROR_SSH_KEY }}
+
+    - name: Checkout wiki repository
+      run: |
+        git clone --mirror "git@github.com:${{ github.repository }}.wiki.git" wiki
+
+    - name: Synchronize wiki to mirror
+      run: |
+        cd wiki;
+        git push --mirror "git@github.com:EpitechPGE3-2025/G-EIP-600-REN-6-1-eip-5.wiki.git";
