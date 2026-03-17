@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.3...cli-v0.1.4) (2026-03-17)
+
+
+### Bug Fixes
+
+* add missing scope for npm setup in release workflow ([b7628d8](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/b7628d8756f4757095e1f169b81eed0edbb90411))
+
 ## [0.1.3](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.2...cli-v0.1.3) (2026-03-17)
 
 
