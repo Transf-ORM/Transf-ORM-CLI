@@ -1,0 +1,78 @@
+name: Auto-fill Acceptance Criteria
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  fill-acceptance-criteria:
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: read
+    steps:
+      - name: Fill acceptance criteria from linked issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+
+            // Regex to find issue numbers in "Closes #123" format
+            const closesRegex = /Closes\s+#(\d+)/gi;
+            const matches = [...body.matchAll(closesRegex)];
+
+            if (matches.length === 0) {
+              console.log('No linked issues found');
+              return;
+            }
+
+            let acceptanceCriteria = [];
+
+            for (const match of matches) {
+              const issueNumber = match[1];
+              try {
+                const issue = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber
+                });
+
+                // Extract acceptance criteria from the issue body
+                const issueBody = issue.data.body || '';
+                const criteriaRegex = /## Acceptance Criteria\n\n([\s\S]*?)(?=##|$)/;
+                const criteriaMatch = issueBody.match(criteriaRegex);
+
+                if (criteriaMatch) {
+                  const criteria = criteriaMatch[1].trim();
+                  acceptanceCriteria.push(`**From issue #${issueNumber}:**\n${criteria}`);
+                }
+              } catch (error) {
+                console.log(`Could not fetch issue #${issueNumber}: ${error.message}`);
+              }
+            }
+
+            if (acceptanceCriteria.length === 0) {
+              console.log('No acceptance criteria found in linked issues');
+              return;
+            }
+
+            // Replace the acceptance criteria section in the PR body
+            let newBody = body;
+            const acceptanceSectionRegex = /## Acceptance Criteria\n\n- \[ \]/;
+
+            if (acceptanceSectionRegex.test(newBody)) {
+              const replacementText = `## Acceptance Criteria\n\n${acceptanceCriteria.join('\n\n')}`;
+              newBody = newBody.replace(acceptanceSectionRegex, replacementText);
+
+              // Update the PR
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                body: newBody
+              });
+
+              console.log('Acceptance criteria filled successfully');
+            }

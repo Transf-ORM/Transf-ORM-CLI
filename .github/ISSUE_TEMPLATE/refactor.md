@@ -22,6 +22,12 @@ Describe what changes should be made and how.
 
 Which parts of the codebase will be affected?
 
+## Acceptance Criteria
+
+How will you know this refactoring is complete? What must be true for this to be considered done?
+
+- [ ]
+
 ## Additional context
 
 Add any other context here.

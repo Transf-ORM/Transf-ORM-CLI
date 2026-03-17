@@ -22,6 +22,12 @@ Describe how you think this feature should work.
 
 Any alternative solutions or features you've considered.
 
+## Acceptance Criteria
+
+How will you know this feature is complete? What must be true for this to be considered done?
+
+- [ ]
+
 ## Additional context
 
 Add any other context, mockups, or examples here.

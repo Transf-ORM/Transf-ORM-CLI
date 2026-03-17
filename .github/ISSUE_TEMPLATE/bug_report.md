@@ -34,6 +34,12 @@ A clear description of what actually happened.
 
 If applicable, add logs or screenshots to help explain the problem.
 
+## Acceptance Criteria
+
+How will you know this bug is fixed? What must be true for this to be considered resolved?
+
+- [ ]
+
 ## Additional context
 
 Add any other context about the problem here.
