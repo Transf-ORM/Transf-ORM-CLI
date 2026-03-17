@@ -10,10 +10,14 @@
   ],
   "packages": {
     ".": {
-      "release-type": "node",
-      "package-name": "@transf-orm/cli",
+      "release-type": "simple",
       "pull-request-title-pattern": "chore: release ${version}",
       "extra-files": [
+        {
+          "type": "json",
+          "file": "package.json",
+          "jsonpath": "$.version"
+        },
         {
           "type": "toml",
           "file": "Cargo.toml",
