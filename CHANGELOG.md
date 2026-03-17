@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.0...cli-v0.1.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* configure npm for OIDC in release workflow ([7dc41da](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/7dc41dab0319661fb5952327b7552bd98d19a699))
+
 ## [0.1.0](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.0.1...cli-v0.1.0) (2026-03-17)
 
 
