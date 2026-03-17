@@ -1,10 +1,17 @@
 {
   "name": "@transform/cli",
   "version": "0.1.0",
-  "main": "src/main.rs",
-  "files": ["dist", "README.md", "LICENSE"],
+  "description": "Transform ORM CLI",
+  "bin": {
+    "transform": "bin/transform.js"
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "..."
+    "build": "cargo build --release"
   },
   "publishConfig": {
     "access": "public"
