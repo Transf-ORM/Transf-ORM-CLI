@@ -1,0 +1,12 @@
+{
+  "name": "@transform/cli",
+  "version": "0.1.0",
+  "main": "src/main.rs",
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "..."
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
