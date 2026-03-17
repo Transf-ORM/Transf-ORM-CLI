@@ -28,7 +28,7 @@ jobs:
   publish:
     needs: release-please
     runs-on: ubuntu-latest
-    if: ${{ needs.release-please.outputs.releases_created }}
+    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
 
     steps:
       - uses: actions/checkout@v4
