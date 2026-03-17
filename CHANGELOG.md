@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.1...cli-v0.1.2) (2026-03-17)
+
+
+### Bug Fixes
+
+* remove redundant npm configuration step in release workflow ([f2378c0](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/f2378c054f36cb718a8c637038f7e439e4e1f54a))
+
 ## [0.1.1](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.0...cli-v0.1.1) (2026-03-17)
 
 
