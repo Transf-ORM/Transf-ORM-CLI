@@ -11,6 +11,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
+      "include-component-in-tag": false,
       "pull-request-title-pattern": "chore: release ${version}",
       "extra-files": [
         {
