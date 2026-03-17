@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.2...cli-v0.1.3) (2026-03-17)
+
+
+### Bug Fixes
+
+* add missing permissions for contents in publish-npm job ([2dafc51](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/2dafc5144b7d2a4a1813d9c6e3970293840e592a))
+
 ## [0.1.2](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.1.1...cli-v0.1.2) (2026-03-17)
 
 
