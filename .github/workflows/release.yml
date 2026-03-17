@@ -24,6 +24,7 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          bootstrap-sha: f2246e6e2ce3585ca0b7fe594f0adbceabc73a00
 
   publish:
     needs: release-please
