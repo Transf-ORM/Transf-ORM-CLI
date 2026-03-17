@@ -1,6 +1,10 @@
 {
   "release-type": "node",
-  "package-name": "transf-orm-cli",
+  "packages": {
+    ".": {
+      "package-name": "transf-orm-cli"
+    }
+  },
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
   "changelog-sections": [
