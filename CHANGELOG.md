@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.3.0...cli-v0.3.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* add debugging step for npmrc in release workflow ([e95aecd](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/e95aecd1328bc1434bd3db2714a07dab9cb43394))
+
 ## [0.3.0](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.5...cli-v0.3.0) (2026-03-18)
 
 
