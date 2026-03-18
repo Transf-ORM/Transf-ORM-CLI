@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.1...cli-v0.2.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* remove npm scope and registry-url from Node.js setup ([f4992a9](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/f4992a9489e77bc177be554fed48d105188903c9))
+
 ## [0.2.1](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.0...cli-v0.2.1) (2026-03-18)
 
 
