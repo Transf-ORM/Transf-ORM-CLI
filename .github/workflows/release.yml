@@ -55,5 +55,10 @@ jobs:
       - name: Build release binary
         run: npm run build
 
+      - name: Debug OIDC token
+        run: |
+          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" | jq .
+
       - name: Publish to npm
         run: npm publish --provenance --access public
