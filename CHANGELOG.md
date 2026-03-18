@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.5...cli-v0.3.0) (2026-03-18)
+
+
+### Features
+
+* add OIDC token debugging step in release workflow ([9c9c61a](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/9c9c61abb6f78d6e01ad95c21b152463f6780a9a))
+
 ## [0.2.5](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.4...cli-v0.2.5) (2026-03-18)
 
 
