@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.4...cli-v0.2.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* change npm ci to npm install in release workflow ([46b8cc7](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/46b8cc799a9b47c755de138a69bb6ede5d243b52))
+
 ## [0.2.4](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.3...cli-v0.2.4) (2026-03-18)
 
 
