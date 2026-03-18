@@ -1,6 +1,6 @@
 {
   "name": "@transf-orm/cli",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "the cli version to transf-orm",
   "main": "bin/transf-orm",
   "bin": {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.2...cli-v0.2.3) (2026-03-18)
+
+
+### Bug Fixes
+
+* add registry-url to Node.js setup in release workflow ([354f4b4](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/354f4b4b6cf554448580b57d1f9e1195acb0ebfe))
+
 ## [0.2.2](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.1...cli-v0.2.2) (2026-03-18)
 
 
