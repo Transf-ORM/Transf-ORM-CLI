@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.3...cli-v0.2.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* update Node.js version to 22 and enhance npm publish command ([06f5f47](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/06f5f474d1cb98419f9bf577a0e4d54fbb940550))
+
 ## [0.2.3](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.2.2...cli-v0.2.3) (2026-03-18)
 
 
