@@ -107,38 +107,55 @@ Acceptance Criteria are clear, testable conditions that must be met for the PR t
 
 ### Documentation
 
-We use **Doxygen** for function documentation. Please follow this format for all public items:
+We use **rustdoc** for documentation — it is built into Cargo and is the Rust standard. Do not use Doxygen tags (`@brief`, `@param`, etc.); they are not supported by rustdoc.
+
+Generate and open the documentation locally with:
+
+```bash
+cargo doc --open
+```
+
+Follow this format for all public items:
 
 ```rust
-/// @brief Brief description of what this function does
+/// One-line summary of what this function does.
 ///
-/// More detailed explanation of the function's purpose and behavior.
+/// Optional longer explanation of purpose and behavior.
 ///
-/// @param param1 Description of the first parameter
-/// @param param2 Description of the second parameter
+/// # Arguments
 ///
-/// @return Description of the return value
+/// * `param1` - Description of the first parameter
+/// * `param2` - Description of the second parameter
 ///
-/// @note Any important notes or warnings
+/// # Returns
 ///
-/// @example
+/// Description of the return value.
+///
+/// # Errors
+///
+/// Describe when and why this function returns an `Err`.
+///
+/// # Examples
+///
 /// ```
-/// let result = my_function(value1, value2);
+/// use transf_orm_cli::pivot::{Schema, DatabaseKind};
+///
+/// let schema = Schema::new(DatabaseKind::PostgreSql);
+/// let json = schema.to_canonical_json().unwrap();
 /// ```
-pub fn my_function(param1: Type, param2: Type) -> ReturnType {
+pub fn my_function(param1: Type, param2: Type) -> Result<ReturnType, Error> {
     // implementation
 }
 ```
 
-**Doxygen tags**:
+**Standard rustdoc sections** (use only when relevant):
 
-- `@brief` - One-line description
-- `@param` - Document parameters
-- `@return` - Document return value
-- `@note` - Add notes or warnings
-- `@example` - Provide usage examples
-- `@deprecated` - Mark as deprecated
-- `@todo` - Mark incomplete implementations
+- `# Arguments` — document parameters
+- `# Returns` — document the return value
+- `# Errors` — document `Err` cases for `Result`-returning functions
+- `# Panics` — document conditions that cause a panic
+- `# Safety` — required for `unsafe` functions
+- `# Examples` — usage examples, **executed as tests** by `cargo test`
 
 ### Commit Messages
 
