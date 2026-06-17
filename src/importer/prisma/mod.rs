@@ -13,6 +13,15 @@ use parser::{PrismaParser, Rule};
 
 // ── Public API ─────────────────────────────────────────────────────────────
 
+/// Importer for Prisma Schema Language (`.prisma`) files.
+pub struct PrismaImporter;
+
+impl super::Importer for PrismaImporter {
+    fn import(&self, input: &str) -> Result<crate::pivot::Schema, super::ImportError> {
+        parse_schema(input)
+    }
+}
+
 /// Parse a Prisma Schema Language string and return the pivot [`Schema`].
 ///
 /// # Errors
