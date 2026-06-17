@@ -1,0 +1,76 @@
+// ── Silent rules (auto-consumed between tokens) ────────────────────────────
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+COMMENT    = _{ ("///" | "//") ~ (!"\n" ~ ANY)* }
+
+// ── Primitives ─────────────────────────────────────────────────────────────
+identifier  = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_")* }
+string_lit   = ${ "\"" ~ string_inner ~ "\"" }
+string_inner = @{ (escape_seq | (!"\"" ~ ANY))* }
+escape_seq   = @{ "\\" ~ ("\"" | "\\" | "n" | "r" | "t" | "u") }
+integer     = @{ "-"? ~ ASCII_DIGIT+ }
+float_num   = @{ "-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+ }
+
+// ── Top-level ──────────────────────────────────────────────────────────────
+schema = { SOI ~ block* ~ EOI }
+
+block = {
+    datasource_block
+  | generator_block
+  | model_block
+  | enum_block
+  | view_block
+  | type_alias
+}
+
+// ── Config blocks (datasource / generator) ─────────────────────────────────
+datasource_block = { "datasource" ~ identifier ~ "{" ~ config_field* ~ "}" }
+generator_block  = { "generator"  ~ identifier ~ "{" ~ config_field* ~ "}" }
+config_field     = { identifier ~ "=" ~ config_value }
+config_value     = { env_func | array_value | string_lit | identifier }
+env_func         = { "env" ~ "(" ~ string_lit ~ ")" }
+
+// ── Model block ────────────────────────────────────────────────────────────
+model_block = { "model" ~ identifier ~ "{" ~ model_entry* ~ "}" }
+model_entry = { block_attribute | field_decl }
+
+field_decl       = { identifier ~ field_type ~ field_attribute* }
+field_type       = { unsupported_type | scalar_field_type }
+scalar_field_type = { base_type ~ type_modifier? }
+unsupported_type = { "Unsupported" ~ "(" ~ string_lit ~ ")" ~ type_modifier? }
+base_type        = @{ identifier }
+type_modifier    = { "[]" | "?" }
+
+// ── Attributes ─────────────────────────────────────────────────────────────
+field_attribute = { "@" ~ attribute_path ~ attribute_args? }
+block_attribute = { "@@" ~ attribute_path ~ attribute_args? }
+attribute_path  = @{ identifier ~ ("." ~ identifier)* }
+attribute_args  = { "(" ~ arg_list? ~ ")" }
+arg_list        = { argument ~ ("," ~ argument)* ~ ","? }
+argument        = { named_arg | positional_arg }
+named_arg       = { identifier ~ ":" ~ attr_value }
+positional_arg  = { attr_value }
+
+// function_call must come before identifier so "uuid()" is not parsed as just "uuid"
+attr_value = {
+    array_value
+  | function_call
+  | string_lit
+  | float_num
+  | integer
+  | identifier
+}
+
+array_value   = { "[" ~ (attr_value ~ ("," ~ attr_value)* ~ ","?)? ~ "]" }
+// function_call uses arg_list so `field(sort: Desc)` can carry named args (e.g. @@index columns)
+function_call = { identifier ~ "(" ~ arg_list? ~ ")" }
+
+// ── Enum block ─────────────────────────────────────────────────────────────
+enum_block  = { "enum" ~ identifier ~ "{" ~ enum_entry* ~ "}" }
+enum_entry  = { block_attribute | enum_value }
+enum_value  = { identifier ~ field_attribute* }
+
+// ── View block (Prisma 4.9+) — parsed but stored in OrmMetadata ───────────
+view_block = { "view" ~ identifier ~ "{" ~ model_entry* ~ "}" }
+
+// ── Type alias — parsed but inlined at use site ───────────────────────────
+type_alias = { "type" ~ identifier ~ "=" ~ base_type ~ field_attribute* }

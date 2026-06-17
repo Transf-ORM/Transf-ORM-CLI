@@ -1,0 +1,271 @@
+// ── Configuration ────────────────────────────────────────────────────────────
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "shop", "analytics"]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "fullTextSearch", "views"]
+}
+
+// ── Type aliases ──────────────────────────────────────────────────────────────
+
+/// Shorthand for a UUID primary key with auto-generation.
+type UuidPk = String @id @default(uuid()) @db.Uuid
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  MODERATOR @map("moderator")
+  ADMIN     @map("admin")
+
+  @@schema("public")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+
+  @@map("post_status")
+  @@schema("public")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+
+  @@map("order_status")
+  @@schema("shop")
+}
+
+// ── Models ────────────────────────────────────────────────────────────────────
+
+model User {
+  /// Unique identifier — UUID stored in a native uuid column.
+  id          UuidPk                         // type alias inlining
+  email       String    @unique @db.VarChar(255)
+  username    String    @unique @db.VarChar(50)
+  displayName String?   @db.VarChar(100)    @map("display_name")
+  bio         String?   @db.Text
+  role        Role      @default(USER)
+  score       Int       @default(0)         @db.SmallInt
+  balance     Decimal   @default(0)         @db.Decimal(12, 2)
+  metadata    Json?     @db.JsonB
+  ipAddress   String?   @db.Inet            @map("ip_address")
+  tags        String[]                      // scalar array
+  createdAt   DateTime  @default(now())     @map("created_at")
+  updatedAt   DateTime  @updatedAt          @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  // Relations
+  profile         Profile?
+  posts           Post[]
+  comments        Comment[]
+  orders          Order[]
+  writtenReviews  Review[] @relation("ReviewAuthor")
+  receivedReviews Review[] @relation("ReviewTarget")
+
+  @@map("users")
+  @@schema("public")
+  @@index([createdAt(sort: Desc)], map: "idx_users_created_at")
+  @@index([email, username], type: Hash)
+}
+
+model Profile {
+  id        Int      @id(map: "pk_profile") @default(autoincrement())
+  userId    String   @unique @db.Uuid       @map("user_id")
+  website   String?  @db.VarChar(500)
+  location  String?  @db.VarChar(100)
+  birthDate DateTime? @db.Date              @map("birth_date")
+  timezone  String   @default("UTC")        @db.VarChar(50)
+  /// Raw PostgreSQL hstore — no ORM equivalent, preserved as Unsupported.
+  rawConfig Unsupported("hstore")?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+  @@schema("public")
+}
+
+model Post {
+  id          Int        @id @default(autoincrement())
+  slug        String     @unique              @db.VarChar(255)
+  title       String                          @db.VarChar(500)
+  content     String                          @db.Text
+  excerpt     String?                         @db.VarChar(300)
+  status      PostStatus @default(DRAFT)
+  viewCount   BigInt     @default(0)          @map("view_count")
+  rating      Float      @default(0)          @db.DoublePrecision
+  publishedAt DateTime?  @db.Timestamp(3)     @map("published_at")
+  authorId    String     @db.Uuid             @map("author_id")
+  createdAt   DateTime   @default(now())      @map("created_at")
+  updatedAt   DateTime   @updatedAt           @map("updated_at")
+  /// Internal field excluded from Prisma client — kept in DB for audit.
+  internalNote String?   @ignore              @db.Text @map("internal_note")
+
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments Comment[]
+  tags     Tag[]     // implicit M2M
+  media    Media[]
+
+  @@map("posts")
+  @@schema("public")
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([authorId])
+  @@fulltext([title, content])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  postId    Int      @map("post_id")
+  authorId  String   @db.Uuid  @map("author_id")
+  parentId  Int?     @map("parent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt      @map("updated_at")
+
+  post    Post      @relation(fields: [postId],   references: [id], onDelete: Cascade)
+  author  User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies Comment[] @relation("CommentReplies")
+
+  @@map("comments")
+  @@schema("public")
+  @@index([postId])
+  @@index([authorId])
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(100)
+  slug  String @unique @db.VarChar(100)
+  posts Post[] // implicit M2M back-reference
+
+  @@map("tags")
+  @@schema("public")
+}
+
+model Media {
+  id        Int    @id @default(autoincrement())
+  url       String @db.VarChar(1000)
+  mimeType  String @db.VarChar(100)  @map("mime_type")
+  sizeBytes BigInt @map("size_bytes")
+  width     Int?   @db.SmallInt
+  height    Int?   @db.SmallInt
+  postId    Int    @map("post_id")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("media")
+  @@schema("public")
+}
+
+/// Two distinct relations between User and User (named relations on same model pair).
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int      @db.SmallInt
+  comment   String?  @db.Text
+  authorId  String   @db.Uuid @map("author_id")
+  targetId  String   @db.Uuid @map("target_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author User @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target User @relation("ReviewTarget", fields: [targetId], references: [id])
+
+  @@map("reviews")
+  @@schema("public")
+  @@unique([authorId, targetId], map: "uq_review_author_target")
+}
+
+// ── Shop schema ───────────────────────────────────────────────────────────────
+
+model Product {
+  id          Int     @id(map: "pk_product") @default(autoincrement())
+  sku         String  @unique              @db.VarChar(100)
+  name        String                       @db.VarChar(500)
+  description String?                      @db.Text
+  price       Decimal                      @db.Decimal(10, 2)
+  stock       Int     @default(0)
+  attributes  Json    @default("{}")       @db.JsonB
+  isActive    Boolean @default(true)       @map("is_active")
+  createdAt   DateTime @default(now())     @map("created_at")
+
+  orderItems OrderItem[]
+
+  @@map("products")
+  @@schema("shop")
+  @@index([name(sort: Asc)], type: BTree)
+  @@fulltext([name, description])
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  reference String      @unique @default(dbgenerated("gen_random_uuid()")) @db.VarChar(36)
+  status    OrderStatus @default(PENDING)
+  total     Decimal     @db.Decimal(10, 2)
+  userId    String      @db.Uuid @map("user_id")
+  shippedAt DateTime?   @db.Timestamp(0) @map("shipped_at")
+  createdAt DateTime    @default(now())  @map("created_at")
+  updatedAt DateTime    @updatedAt       @map("updated_at")
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@map("orders")
+  @@schema("shop")
+  @@index([userId, status])
+  @@index([createdAt(sort: Desc)])
+}
+
+/// Composite PK — (orderId, productId) — no autoincrement id.
+model OrderItem {
+  orderId   Int     @map("order_id")
+  productId Int     @map("product_id")
+  quantity  Int
+  unitPrice Decimal @db.Decimal(10, 2) @map("unit_price")
+
+  order   Order   @relation(fields: [orderId],   references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@id([orderId, productId])
+  @@map("order_items")
+  @@schema("shop")
+}
+
+// ── Analytics schema (@@ignore — excluded from Prisma client) ─────────────────
+
+model Event {
+  id         BigInt   @id @default(autoincrement())
+  name       String   @db.VarChar(200)
+  userId     String?  @db.Uuid      @map("user_id")
+  sessionId  String?  @db.Uuid      @map("session_id")
+  payload    Json     @default("{}") @db.JsonB
+  ipAddr     String?  @db.Inet      @map("ip_addr")
+  happenedAt DateTime @default(now()) @db.Timestamptz @map("happened_at")
+
+  @@map("events")
+  @@schema("analytics")
+  @@ignore
+  @@index([name, happenedAt(sort: Desc)])
+}
+
+// ── View ──────────────────────────────────────────────────────────────────────
+
+view UserStats {
+  userId       String @unique @db.Uuid @map("user_id")
+  email        String
+  postCount    Int    @map("post_count")
+  commentCount Int    @map("comment_count")
+  orderCount   Int    @map("order_count")
+
+  @@map("v_user_stats")
+  @@schema("analytics")
+}

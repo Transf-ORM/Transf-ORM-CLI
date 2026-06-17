@@ -137,9 +137,9 @@ pub struct Sequence {
 ///
 /// # Serialization
 ///
-/// `serde_json` uses `BTreeMap` by default (without the `preserve_order` feature),
-/// so JSON object keys are already sorted alphabetically. [`Schema::to_canonical_json`]
-/// relies on this property to produce deterministic output suitable for `git diff`.
+/// [`Schema::to_canonical_json`] routes serialization through [`serde_json::Value`]
+/// (which stores object entries in a `BTreeMap`) to guarantee alphabetical key order
+/// regardless of struct field declaration order — suitable for meaningful `git diff`.
 ///
 /// # Examples
 ///
@@ -199,12 +199,17 @@ impl Schema {
 
     /// Serialize to canonical JSON — pretty-printed with alphabetically sorted keys.
     ///
+    /// Keys are sorted by routing serialization through [`serde_json::Value`], which
+    /// stores object entries in a `BTreeMap` and therefore iterates them in alphabetical
+    /// order regardless of the struct field order.
+    ///
     /// # Errors
     ///
     /// Returns an error if any field cannot be serialized (e.g. a non-finite float
     /// inside a [`types::LiteralValue::Float`] default value).
     pub fn to_canonical_json(&self) -> Result<String, serde_json::Error> {
-        serde_json::to_string_pretty(self)
+        let value = serde_json::to_value(self)?;
+        serde_json::to_string_pretty(&value)
     }
 
     /// Deserialize a `Schema` from a canonical JSON string.
@@ -220,11 +225,11 @@ impl Schema {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::metadata::OrmMetadata;
     use super::relation::{CascadeOptions, JunctionTable, RelationKind};
     use super::table::{Behavior, Column, PrimaryKey, Table};
     use super::types::{ColumnType, DefaultFn, DefaultValue, ScalarType};
+    use super::*;
 
     fn user_table() -> Table {
         Table {
@@ -257,14 +262,19 @@ mod tests {
                     default: Some(DefaultValue::Function(DefaultFn::Now)),
                 },
             ],
-            primary_key: Some(PrimaryKey { name: None, columns: vec!["id".to_string()] }),
+            primary_key: Some(PrimaryKey {
+                name: None,
+                columns: vec!["id".to_string()],
+            }),
             indexes: Vec::new(),
             unique_constraints: Vec::new(),
             check_constraints: Vec::new(),
             foreign_keys: Vec::new(),
             relations: Vec::new(),
             inheritance: None,
-            behaviors: vec![Behavior::CreatedAt { column: "createdAt".to_string() }],
+            behaviors: vec![Behavior::CreatedAt {
+                column: "createdAt".to_string(),
+            }],
             metadata: OrmMetadata::default(),
         }
     }
@@ -284,12 +294,46 @@ mod tests {
     fn canonical_json_has_sorted_keys() {
         let schema = Schema::new(DatabaseKind::PostgreSql);
         let json = schema.to_canonical_json().unwrap();
-        let value: serde_json::Value = serde_json::from_str(&json).unwrap();
-        let obj = value.as_object().unwrap();
-        let keys: Vec<&str> = obj.keys().map(|k| k.as_str()).collect();
-        let mut sorted = keys.clone();
+
+        // Extract top-level keys in the order they appear in the raw string,
+        // without going through serde_json::Value (which uses BTreeMap and would
+        // sort keys on its own, masking a bug in to_canonical_json).
+        let keys_in_order: Vec<&str> = json
+            .lines()
+            .filter_map(|line| {
+                let trimmed = line.trim();
+                if trimmed.starts_with('"') && trimmed.contains("\": ") {
+                    trimmed
+                        .strip_prefix('"')
+                        .and_then(|s| s.split_once("\": ").map(|(k, _)| k))
+                } else {
+                    None
+                }
+            })
+            // Top-level keys are at indent level 2 (two spaces); nested keys are deeper.
+            // Filter to lines that start with exactly two spaces in the original string.
+            .collect::<Vec<_>>();
+
+        // Re-derive only the top-level keys (indented with exactly 2 spaces).
+        let top_level_keys: Vec<&str> = json
+            .lines()
+            .filter(|line| {
+                line.starts_with("  \"") && !line.starts_with("   ") && line.contains("\": ")
+            })
+            .filter_map(|line| {
+                line.trim()
+                    .strip_prefix('"')
+                    .and_then(|s| s.split_once("\": ").map(|(k, _)| k))
+            })
+            .collect();
+
+        let mut sorted = top_level_keys.clone();
         sorted.sort();
-        assert_eq!(keys, sorted, "JSON keys must be alphabetically sorted");
+        assert_eq!(
+            top_level_keys, sorted,
+            "top-level JSON keys must be alphabetically sorted in the raw string"
+        );
+        let _ = keys_in_order; // used above to establish the approach
     }
 
     #[test]
@@ -310,7 +354,10 @@ mod tests {
             from_fields: vec!["id".to_string()],
             to_table: "Tag".to_string(),
             to_fields: vec!["id".to_string()],
-            cascade: CascadeOptions { on_delete: None, on_update: None },
+            cascade: CascadeOptions {
+                on_delete: None,
+                on_update: None,
+            },
         };
 
         let json = serde_json::to_string(&relation).unwrap();

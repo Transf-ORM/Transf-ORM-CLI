@@ -1,0 +1,2686 @@
+{
+  "pivotVersion": "1.0.0",
+  "database": "postgreSql",
+  "dialectVersion": null,
+  "dbSchemas": [],
+  "extensions": [],
+  "tables": [
+    {
+      "name": "User",
+      "dbName": "users",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "uuid"
+          }
+        },
+        {
+          "name": "email",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 255
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "username",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 50
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "displayName",
+          "dbName": "display_name",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "bio",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "role",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "enum",
+              "name": "Role"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "USER"
+            }
+          }
+        },
+        {
+          "name": "score",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": {
+              "kind": "smallInt"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "int",
+              "value": 0
+            }
+          }
+        },
+        {
+          "name": "balance",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "decimal",
+              "precision": 65,
+              "scale": 30
+            },
+            "dbHint": {
+              "kind": "numeric",
+              "precision": 12,
+              "scale": 2
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "int",
+              "value": 0
+            }
+          }
+        },
+        {
+          "name": "metadata",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "json"
+            },
+            "dbHint": {
+              "kind": "custom",
+              "type_expr": "JsonB"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "ipAddress",
+          "dbName": "ip_address",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "inet"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "tags",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": null,
+            "array": true
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "dbName": "updated_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "deletedAt",
+          "dbName": "deleted_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "createdAt",
+              "sort": "desc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "email",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "username",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": {
+            "kind": "hash"
+          },
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "email"
+          ]
+        },
+        {
+          "name": null,
+          "columns": [
+            "username"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Profile"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Profile",
+          "toFields": [
+            "userId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Post"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Post",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Comment"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Comment",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": "ReviewAuthor",
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Review"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Review",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        },
+        {
+          "name": "ReviewTarget",
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Review"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Review",
+          "toFields": [
+            "targetId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Order"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Order",
+          "toFields": [
+            "userId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [
+        {
+          "kind": "updatedAt",
+          "column": "updatedAt"
+        }
+      ],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Profile",
+      "dbName": "profiles",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "userId",
+          "dbName": "user_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "website",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 500
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "location",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "birthDate",
+          "dbName": "birth_date",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": {
+              "kind": "date"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "timezone",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 50
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "UTC"
+            }
+          }
+        },
+        {
+          "name": "rawConfig",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "unsupported",
+              "type_name": "hstore"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": "pk_profile",
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "userId"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "userId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Profile"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Profile",
+          "toFields": [
+            "userId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Post",
+      "dbName": "posts",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "slug",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 255
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "title",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 500
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "content",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "excerpt",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 300
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "status",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "enum",
+              "name": "PostStatus"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "DRAFT"
+            }
+          }
+        },
+        {
+          "name": "viewCount",
+          "dbName": "view_count",
+          "type": {
+            "scalar": {
+              "kind": "bigInt"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "int",
+              "value": 0
+            }
+          }
+        },
+        {
+          "name": "rating",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "double"
+            },
+            "dbHint": {
+              "kind": "doublePrecision"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "int",
+              "value": 0
+            }
+          }
+        },
+        {
+          "name": "publishedAt",
+          "dbName": "published_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": {
+              "kind": "timestamp",
+              "precision": 3
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "authorId",
+          "dbName": "author_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "dbName": "updated_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "internalNote",
+          "dbName": "internal_note",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "status",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "publishedAt",
+              "sort": "desc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "authorId",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "title",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "content",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": {
+            "kind": "custom",
+            "name": "fulltext"
+          },
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "slug"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "authorId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Post",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Comment"
+          },
+          "fromTable": "Post",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Comment",
+          "toFields": [
+            "postId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Media"
+          },
+          "fromTable": "Post",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Media",
+          "toFields": [
+            "postId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "manyToMany",
+            "junction": {
+              "table": "_PostToTag",
+              "fromColumn": "A",
+              "toColumn": "B"
+            },
+            "implicit": true
+          },
+          "fromTable": "Post",
+          "fromFields": [],
+          "toTable": "Tag",
+          "toFields": [],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [
+        {
+          "kind": "updatedAt",
+          "column": "updatedAt"
+        }
+      ],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": [
+          {
+            "name": "prisma.ignoredFields",
+            "value": [
+              "internalNote"
+            ],
+            "recoverable": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Comment",
+      "dbName": "comments",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "content",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "postId",
+          "dbName": "post_id",
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "authorId",
+          "dbName": "author_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "parentId",
+          "dbName": "parent_id",
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "dbName": "updated_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "postId",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "authorId",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "postId"
+          ],
+          "referencedTable": "Post",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        },
+        {
+          "name": null,
+          "columns": [
+            "authorId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        },
+        {
+          "name": null,
+          "columns": [
+            "parentId"
+          ],
+          "referencedTable": "Comment",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": null,
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "Post",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Comment",
+          "toFields": [
+            "postId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Comment",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": "CommentReplies",
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "Comment"
+          },
+          "fromTable": "Comment",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Comment",
+          "toFields": [
+            "parentId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [
+        {
+          "kind": "updatedAt",
+          "column": "updatedAt"
+        }
+      ],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Tag",
+      "dbName": "tags",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "name",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "slug",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "name"
+          ]
+        },
+        {
+          "name": null,
+          "columns": [
+            "slug"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "manyToMany",
+            "junction": {
+              "table": "_PostToTag",
+              "fromColumn": "A",
+              "toColumn": "B"
+            },
+            "implicit": true
+          },
+          "fromTable": "Tag",
+          "fromFields": [],
+          "toTable": "Post",
+          "toFields": [],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Media",
+      "dbName": "media",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "url",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 1000
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "mimeType",
+          "dbName": "mime_type",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "sizeBytes",
+          "dbName": "size_bytes",
+          "type": {
+            "scalar": {
+              "kind": "bigInt"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "width",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": {
+              "kind": "smallInt"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "height",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": {
+              "kind": "smallInt"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "postId",
+          "dbName": "post_id",
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [],
+      "uniqueConstraints": [],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "postId"
+          ],
+          "referencedTable": "Post",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "Post",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Media",
+          "toFields": [
+            "postId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Review",
+      "dbName": "reviews",
+      "dbSchema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "rating",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": {
+              "kind": "smallInt"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "comment",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "authorId",
+          "dbName": "author_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "targetId",
+          "dbName": "target_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [],
+      "uniqueConstraints": [
+        {
+          "name": "uq_review_author_target",
+          "columns": [
+            "authorId",
+            "targetId"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "authorId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": null,
+          "onUpdate": null
+        },
+        {
+          "name": null,
+          "columns": [
+            "targetId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": null,
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": "ReviewAuthor",
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Review",
+          "toFields": [
+            "authorId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        },
+        {
+          "name": "ReviewTarget",
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Review",
+          "toFields": [
+            "targetId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Product",
+      "dbName": "products",
+      "dbSchema": "shop",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "sku",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 100
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "name",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 500
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "description",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "text"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "price",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "decimal",
+              "precision": 65,
+              "scale": 30
+            },
+            "dbHint": {
+              "kind": "numeric",
+              "precision": 10,
+              "scale": 2
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "stock",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "int",
+              "value": 0
+            }
+          }
+        },
+        {
+          "name": "attributes",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "json"
+            },
+            "dbHint": {
+              "kind": "custom",
+              "type_expr": "JsonB"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "{}"
+            }
+          }
+        },
+        {
+          "name": "isActive",
+          "dbName": "is_active",
+          "type": {
+            "scalar": {
+              "kind": "boolean"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "bool",
+              "value": true
+            }
+          }
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        }
+      ],
+      "primaryKey": {
+        "name": "pk_product",
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "name",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": {
+            "kind": "bTree"
+          },
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "name",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "description",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": {
+            "kind": "custom",
+            "name": "fulltext"
+          },
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "sku"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "OrderItem"
+          },
+          "fromTable": "Product",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "OrderItem",
+          "toFields": [
+            "productId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Order",
+      "dbName": "orders",
+      "dbSchema": "shop",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "reference",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 36
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "raw",
+            "value": "gen_random_uuid()"
+          }
+        },
+        {
+          "name": "status",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "enum",
+              "name": "OrderStatus"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "PENDING"
+            }
+          }
+        },
+        {
+          "name": "total",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "decimal",
+              "precision": 65,
+              "scale": 30
+            },
+            "dbHint": {
+              "kind": "numeric",
+              "precision": 10,
+              "scale": 2
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "userId",
+          "dbName": "user_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "shippedAt",
+          "dbName": "shipped_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": {
+              "kind": "timestamp",
+              "precision": 0
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "createdAt",
+          "dbName": "created_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "dbName": "updated_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "userId",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "status",
+              "sort": "asc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        },
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "createdAt",
+              "sort": "desc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": null,
+          "columns": [
+            "reference"
+          ]
+        }
+      ],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "userId"
+          ],
+          "referencedTable": "User",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": null,
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "User",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "Order",
+          "toFields": [
+            "userId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToOne",
+            "owner_table": "OrderItem"
+          },
+          "fromTable": "Order",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "OrderItem",
+          "toFields": [
+            "orderId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [
+        {
+          "kind": "updatedAt",
+          "column": "updatedAt"
+        }
+      ],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "OrderItem",
+      "dbName": "order_items",
+      "dbSchema": "shop",
+      "columns": [
+        {
+          "name": "orderId",
+          "dbName": "order_id",
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "productId",
+          "dbName": "product_id",
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "quantity",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "int"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "unitPrice",
+          "dbName": "unit_price",
+          "type": {
+            "scalar": {
+              "kind": "decimal",
+              "precision": 65,
+              "scale": 30
+            },
+            "dbHint": {
+              "kind": "numeric",
+              "precision": 10,
+              "scale": 2
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "orderId",
+          "productId"
+        ]
+      },
+      "indexes": [],
+      "uniqueConstraints": [],
+      "checkConstraints": [],
+      "foreignKeys": [
+        {
+          "name": null,
+          "columns": [
+            "orderId"
+          ],
+          "referencedTable": "Order",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": null
+        },
+        {
+          "name": null,
+          "columns": [
+            "productId"
+          ],
+          "referencedTable": "Product",
+          "referencedColumns": [
+            "id"
+          ],
+          "onDelete": null,
+          "onUpdate": null
+        }
+      ],
+      "relations": [
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "Order",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "OrderItem",
+          "toFields": [
+            "orderId"
+          ],
+          "cascade": {
+            "onDelete": "cascade",
+            "onUpdate": null
+          }
+        },
+        {
+          "name": null,
+          "kind": {
+            "kind": "oneToMany"
+          },
+          "fromTable": "Product",
+          "fromFields": [
+            "id"
+          ],
+          "toTable": "OrderItem",
+          "toFields": [
+            "productId"
+          ],
+          "cascade": {
+            "onDelete": null,
+            "onUpdate": null
+          }
+        }
+      ],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    },
+    {
+      "name": "Event",
+      "dbName": "events",
+      "dbSchema": "analytics",
+      "columns": [
+        {
+          "name": "id",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "bigInt"
+            },
+            "dbHint": null,
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "autoIncrement"
+          }
+        },
+        {
+          "name": "name",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "varChar",
+              "length": 200
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": null
+        },
+        {
+          "name": "userId",
+          "dbName": "user_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "sessionId",
+          "dbName": "session_id",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "uuid"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "payload",
+          "dbName": null,
+          "type": {
+            "scalar": {
+              "kind": "json"
+            },
+            "dbHint": {
+              "kind": "custom",
+              "type_expr": "JsonB"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "literal",
+            "value": {
+              "kind": "string",
+              "value": "{}"
+            }
+          }
+        },
+        {
+          "name": "ipAddr",
+          "dbName": "ip_addr",
+          "type": {
+            "scalar": {
+              "kind": "string"
+            },
+            "dbHint": {
+              "kind": "inet"
+            },
+            "array": false
+          },
+          "nullable": true,
+          "default": null
+        },
+        {
+          "name": "happenedAt",
+          "dbName": "happened_at",
+          "type": {
+            "scalar": {
+              "kind": "timestamp",
+              "precision": 3,
+              "with_timezone": false
+            },
+            "dbHint": {
+              "kind": "timestamptz"
+            },
+            "array": false
+          },
+          "nullable": false,
+          "default": {
+            "kind": "function",
+            "value": "now"
+          }
+        }
+      ],
+      "primaryKey": {
+        "name": null,
+        "columns": [
+          "id"
+        ]
+      },
+      "indexes": [
+        {
+          "name": null,
+          "columns": [
+            {
+              "column": "name",
+              "sort": "asc",
+              "nulls": null
+            },
+            {
+              "column": "happenedAt",
+              "sort": "desc",
+              "nulls": null
+            }
+          ],
+          "unique": false,
+          "partial": null,
+          "indexType": null,
+          "include": []
+        }
+      ],
+      "uniqueConstraints": [],
+      "checkConstraints": [],
+      "foreignKeys": [],
+      "relations": [],
+      "inheritance": null,
+      "behaviors": [],
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": [
+          {
+            "name": "prisma.ignore",
+            "value": true,
+            "recoverable": true
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "name": "UserStats",
+      "dbName": "v_user_stats",
+      "dbSchema": "analytics",
+      "definition": "",
+      "columns": [
+        {
+          "name": "userId",
+          "dbName": "user_id"
+        },
+        {
+          "name": "email",
+          "dbName": null
+        },
+        {
+          "name": "postCount",
+          "dbName": "post_count"
+        },
+        {
+          "name": "commentCount",
+          "dbName": "comment_count"
+        },
+        {
+          "name": "orderCount",
+          "dbName": "order_count"
+        }
+      ],
+      "updatable": false,
+      "metadata": {
+        "sourceOrm": "prisma",
+        "targetHints": {},
+        "unknownFeatures": []
+      }
+    }
+  ],
+  "materializedViews": [],
+  "enums": [
+    {
+      "name": "Role",
+      "dbName": null,
+      "dbSchema": "public",
+      "values": [
+        {
+          "name": "USER",
+          "dbName": null
+        },
+        {
+          "name": "MODERATOR",
+          "dbName": "moderator"
+        },
+        {
+          "name": "ADMIN",
+          "dbName": "admin"
+        }
+      ]
+    },
+    {
+      "name": "PostStatus",
+      "dbName": "post_status",
+      "dbSchema": "public",
+      "values": [
+        {
+          "name": "DRAFT",
+          "dbName": null
+        },
+        {
+          "name": "PUBLISHED",
+          "dbName": null
+        },
+        {
+          "name": "ARCHIVED",
+          "dbName": null
+        }
+      ]
+    },
+    {
+      "name": "OrderStatus",
+      "dbName": "order_status",
+      "dbSchema": "shop",
+      "values": [
+        {
+          "name": "PENDING",
+          "dbName": null
+        },
+        {
+          "name": "PAID",
+          "dbName": null
+        },
+        {
+          "name": "SHIPPED",
+          "dbName": null
+        },
+        {
+          "name": "DELIVERED",
+          "dbName": null
+        },
+        {
+          "name": "CANCELLED",
+          "dbName": null
+        }
+      ]
+    }
+  ],
+  "compositeTypes": [],
+  "sequences": [],
+  "functions": [],
+  "procedures": [],
+  "triggers": []
+}
