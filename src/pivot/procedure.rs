@@ -16,7 +16,9 @@ pub enum FunctionLanguage {
     PlPerl,
     /// JavaScript (e.g. PL/V8 in PostgreSQL, or Edge Functions in Supabase).
     JavaScript,
-    Custom { name: String },
+    Custom {
+        name: String,
+    },
 }
 
 /// PostgreSQL function volatility category — affects query planning and caching.

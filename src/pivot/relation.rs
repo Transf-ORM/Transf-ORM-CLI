@@ -63,7 +63,9 @@ pub struct JunctionTable {
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum RelationKind {
     /// One-to-one — `owner_table` holds the foreign key.
-    OneToOne { owner_table: String },
+    OneToOne {
+        owner_table: String,
+    },
     OneToMany,
     ManyToMany {
         junction: JunctionTable,

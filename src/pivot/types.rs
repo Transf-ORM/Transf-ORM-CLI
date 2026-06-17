@@ -14,12 +14,22 @@ pub enum ScalarType {
     BigInt,
     Float,
     Double,
-    Decimal { precision: u8, scale: u8 },
+    Decimal {
+        precision: u8,
+        scale: u8,
+    },
     Boolean,
     Date,
-    Time { precision: u8 },
-    DateTime { precision: u8 },
-    Timestamp { precision: u8, with_timezone: bool },
+    Time {
+        precision: u8,
+    },
+    DateTime {
+        precision: u8,
+    },
+    Timestamp {
+        precision: u8,
+        with_timezone: bool,
+    },
     Json,
     /// PostgreSQL JSONB — binary JSON with indexing support.
     JsonB,
@@ -35,12 +45,18 @@ pub enum ScalarType {
     TsVector,
     /// PostgreSQL TSQUERY — full-text search query.
     TsQuery,
+    /// Reference to a named [`Enum`](crate::pivot::Enum) defined in the same schema.
+    Enum {
+        name: String,
+    },
     /// Raw database type with no known IR equivalent.
     ///
     /// Preserved verbatim so round-trips back to the source ORM are lossless.
     /// Exporters targeting a different ORM must decide how to handle this — usually
     /// by emitting a warning and carrying the raw expression through.
-    Unsupported { type_name: String },
+    Unsupported {
+        type_name: String,
+    },
 }
 
 /// Database-specific type hint layered on top of [`ScalarType`].
@@ -51,29 +67,93 @@ pub enum ScalarType {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum DbHint {
-    VarChar { length: u32 },
-    Char { length: u32 },
+    // ── String types ───────────────────────────────────────────────────────
+    VarChar {
+        length: u32,
+    },
+    Char {
+        length: u32,
+    },
     Text,
+    TinyText,
+    MediumText,
+    LongText,
+    // ── Integer types ──────────────────────────────────────────────────────
+    /// Explicit SMALLINT / INT2 column type hint (e.g. `@db.SmallInt`).
+    SmallInt,
+    /// Explicit INT / INT4 column type hint (e.g. MySQL `@db.Int`).
+    Int,
+    /// Explicit BIGINT / INT8 column type hint (e.g. `@db.BigInt`).
+    BigInt,
     TinyInt,
     MediumInt,
     Year,
-    VarBinary { length: u32 },
-    Binary { length: u32 },
+    // ── Floating point ─────────────────────────────────────────────────────
+    /// Single-precision FLOAT (4 bytes).
+    Float,
+    /// DOUBLE PRECISION / FLOAT8 (8 bytes).
+    DoublePrecision,
+    /// REAL — alias for single-precision float in PostgreSQL.
+    Real,
+    Numeric {
+        precision: u8,
+        scale: u8,
+    },
+    // ── Binary / blob types ────────────────────────────────────────────────
+    VarBinary {
+        length: u32,
+    },
+    Binary {
+        length: u32,
+    },
     TinyBlob,
     Blob,
     MediumBlob,
     LongBlob,
-    TinyText,
-    MediumText,
-    LongText,
-    Numeric { precision: u8, scale: u8 },
+    /// PostgreSQL BYTEA — variable-length binary string.
+    ByteA,
+    /// BIT(n) or VARBIT(n) — fixed or variable-length bit string.
+    Bit {
+        length: Option<u32>,
+    },
+    // ── Date / time ────────────────────────────────────────────────────────
+    /// DATE — calendar date without time component.
+    Date,
+    /// TIME(n) — time of day without date.
+    Time {
+        precision: u8,
+    },
+    /// MySQL DATETIME(n) — date and time without timezone.
+    DateTime {
+        precision: u8,
+    },
+    /// MySQL TIMESTAMP(n) or PostgreSQL TIMESTAMP(n) without timezone.
+    Timestamp {
+        precision: u8,
+    },
     /// PostgreSQL TIMESTAMPTZ shorthand.
     Timestamptz,
     /// PostgreSQL TIMETZ shorthand.
     Timetz,
     Interval,
+    // ── PostgreSQL-specific ────────────────────────────────────────────────
+    /// PostgreSQL UUID column type (as opposed to storing UUID as TEXT).
+    Uuid,
+    /// PostgreSQL INET — IPv4 or IPv6 host address.
+    Inet,
+    /// PostgreSQL CIDR — network address.
+    Cidr,
+    /// PostgreSQL XML.
+    Xml,
+    /// PostgreSQL MONEY.
+    Money,
+    /// PostgreSQL OID.
+    Oid,
+    // ── Catch-all ──────────────────────────────────────────────────────────
     /// Arbitrary database type expression not covered by other variants.
-    Custom { type_expr: String },
+    Custom {
+        type_expr: String,
+    },
 }
 
 /// Full type descriptor for a column: abstract kind + optional DB-specific hint.
@@ -105,7 +185,11 @@ pub struct ColumnType {
 impl ColumnType {
     /// Shorthand for a plain scalar column with no DB hint and no array wrapper.
     pub fn simple(scalar: ScalarType) -> Self {
-        Self { scalar, db_hint: None, array: false }
+        Self {
+            scalar,
+            db_hint: None,
+            array: false,
+        }
     }
 }
 
@@ -134,7 +218,9 @@ pub enum DefaultFn {
     /// `@default(autoincrement())` and Drizzle's `serial()` at the IR level.
     AutoIncrement,
     /// Custom function call not covered by other variants.
-    Custom { expr: String },
+    Custom {
+        expr: String,
+    },
 }
 
 /// Default value assigned to a column when no explicit value is provided on insert.

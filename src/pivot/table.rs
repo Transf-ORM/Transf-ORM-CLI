@@ -69,7 +69,9 @@ pub enum IndexType {
     Brin,
     /// PostgreSQL SP-GiST — space-partitioned generalized search tree.
     SpGist,
-    Custom { name: String },
+    Custom {
+        name: String,
+    },
 }
 
 /// A database index on one or more columns of a table.
