@@ -39,8 +39,7 @@ pub fn detect(path: &str) -> Option<&'static OrmDescriptor> {
 
 /// Find an ORM descriptor by its CLI name (case-insensitive).
 pub fn find_by_name(name: &str) -> Option<&'static OrmDescriptor> {
-    ORMS.iter()
-        .find(|o| o.name.eq_ignore_ascii_case(name))
+    ORMS.iter().find(|o| o.name.eq_ignore_ascii_case(name))
 }
 
 /// List CLI names of all known ORMs.

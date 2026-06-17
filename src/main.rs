@@ -38,9 +38,7 @@ fn main() {
             } else {
                 let detected = registry::detect(&path_str).unwrap_or_else(|| {
                     eprintln!("error: could not detect ORM format for '{path_str}'");
-                    eprintln!(
-                        "Use --from to specify: transf-orm convert --from <orm> {path_str}"
-                    );
+                    eprintln!("Use --from to specify: transf-orm convert --from <orm> {path_str}");
                     std::process::exit(1);
                 });
                 if !detected.certain {
