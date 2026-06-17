@@ -1,5 +1,17 @@
 pub mod prisma;
 
+use crate::pivot::Schema;
+
+/// Contract that every ORM importer must satisfy.
+pub trait Importer {
+    /// Parse an ORM schema string and return the pivot [`Schema`].
+    ///
+    /// # Errors
+    ///
+    /// Returns [`ImportError`] if the input cannot be parsed or is structurally invalid.
+    fn import(&self, input: &str) -> Result<Schema, ImportError>;
+}
+
 /// Error returned by any importer when parsing or resolving a schema fails.
 #[derive(Debug)]
 pub enum ImportError {
