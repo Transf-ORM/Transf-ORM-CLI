@@ -68,7 +68,7 @@ fn main() {
             });
 
             match make_importer().import(&content) {
-                Ok(schema) => println!("{}", schema.to_canonical_json().unwrap()),
+                Ok(schema) => println!("{}", schema.to_canonical_json().expect("failed to serialize schema to JSON")),
                 Err(e) => {
                     eprintln!("error: {e}");
                     std::process::exit(1);
