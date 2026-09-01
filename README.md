@@ -138,7 +138,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- Check the [documentation](docs/) for detailed guides
+- Check the [wiki](https://github.com/Transf-ORM/Transf-ORM-CLI/wiki) for detailed guides
 - Open an issue for questions or issues
 - Report bugs using the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md)
 
