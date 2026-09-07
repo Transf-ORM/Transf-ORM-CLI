@@ -49,7 +49,10 @@ impl super::Importer for PrismaImporter {
 /// ```
 pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
     let pairs = PrismaParser::parse(Rule::schema, input)?;
-    let schema_pair = pairs.into_iter().next().expect("pest always produces at least one pair for a valid schema rule");
+    let schema_pair = pairs
+        .into_iter()
+        .next()
+        .expect("pest always produces at least one pair for a valid schema rule");
 
     let mut database = DatabaseKind::PostgreSql;
     let mut raw_models: Vec<RawModel> = Vec::new();
@@ -60,7 +63,10 @@ pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
     for pair in schema_pair.into_inner() {
         match pair.as_rule() {
             Rule::block => {
-                let inner = pair.into_inner().next().expect("a block pair always has an inner rule");
+                let inner = pair
+                    .into_inner()
+                    .next()
+                    .expect("a block pair always has an inner rule");
                 match inner.as_rule() {
                     Rule::datasource_block => database = parser::extract_database_kind(inner),
                     Rule::model_block => raw_models.push(parser::parse_model_block(inner)?),
