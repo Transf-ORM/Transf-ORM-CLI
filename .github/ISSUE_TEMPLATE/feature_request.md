@@ -6,21 +6,14 @@ labels: feature
 assignees: ''
 ---
 
-## Summary
+## Description
 
-A clear and concise description of the feature you want.
-
-## Motivation
-
-Why is this feature needed? What problem does it solve?
+What the feature is, and why it is needed — the problem it solves. Link the relevant
+wiki page or spec section if any.
 
 ## Proposed solution
 
-Describe how you think this feature should work.
-
-## Alternatives considered
-
-Any alternative solutions or features you've considered.
+How it should work. Mention any alternatives considered and why they were dropped.
 
 ## Dependencies
 
@@ -28,10 +21,16 @@ Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank i
 
 ## Acceptance Criteria
 
-How will you know this feature is complete? What must be true for this to be considered done?
+Testable conditions that must all be true for this issue to be considered done.
 
 - [ ]
 
+## Verification guide
+
+Steps a reviewer runs on the PR branch to confirm it works (commands + expected result).
+
+1.
+
 ## Additional context
 
-Add any other context, mockups, or examples here.
+Anything else: references, mockups, examples.

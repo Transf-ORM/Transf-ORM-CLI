@@ -6,21 +6,13 @@ labels: refactor
 assignees: ''
 ---
 
-## Summary
+## Description
 
-A clear description of what needs to be refactored.
-
-## Current situation
-
-Describe the current code and why it needs to be refactored.
+What needs to be refactored, and why — the current situation and its problems.
 
 ## Proposed changes
 
-Describe what changes should be made and how.
-
-## Impact
-
-Which parts of the codebase will be affected?
+What should change and how. Which parts of the codebase are affected.
 
 ## Dependencies
 
@@ -28,10 +20,16 @@ Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank i
 
 ## Acceptance Criteria
 
-How will you know this refactoring is complete? What must be true for this to be considered done?
+Testable conditions that must all be true for this issue to be considered done.
 
 - [ ]
 
+## Verification guide
+
+Steps a reviewer runs on the PR branch to confirm nothing regressed (commands + expected result).
+
+1.
+
 ## Additional context
 
-Add any other context here.
+Anything else.
