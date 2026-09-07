@@ -107,38 +107,50 @@ Acceptance Criteria are clear, testable conditions that must be met for the PR t
 
 ### Documentation
 
-We use **Doxygen** for function documentation. Please follow this format for all public items:
+We use `cargo doc` (rustdoc) for function documentation. Please follow this format for all public items:
 
 ```rust
-/// @brief Brief description of what this function does
+/// Brief description of what this function does.
 ///
-/// More detailed explanation of the function's purpose and behavior.
+/// More detailed explanation of the function's purpose and behavior,
+/// if needed.
 ///
-/// @param param1 Description of the first parameter
-/// @param param2 Description of the second parameter
+/// # Arguments
 ///
-/// @return Description of the return value
+/// * `param1` - Description of the first parameter
+/// * `param2` - Description of the second parameter
 ///
-/// @note Any important notes or warnings
+/// # Returns
 ///
-/// @example
+/// Description of the return value
+///
+/// # Errors
+///
+/// Describes the cases where the function returns an error (if applicable, e.g. `Result`)
+///
+/// # Panics
+///
+/// Describes the cases where the function may panic (if applicable)
+///
+/// # Examples
+///
 /// ```
 /// let result = my_function(value1, value2);
+/// assert_eq!(result, expected);
 /// ```
 pub fn my_function(param1: Type, param2: Type) -> ReturnType {
     // implementation
 }
 ```
-
-**Doxygen tags**:
-
-- `@brief` - One-line description
-- `@param` - Document parameters
-- `@return` - Document return value
-- `@note` - Add notes or warnings
-- `@example` - Provide usage examples
-- `@deprecated` - Mark as deprecated
-- `@todo` - Mark incomplete implementations
+ 
+### Notes on the format
+ 
+- `@brief` → simply the first line of the comment (rustdoc automatically treats the first sentence as the summary)
+- `@param` → `# Arguments` section with bullet points
+- `@return` → `# Returns` section
+- `@note` → can become `# Panics`, `# Errors`, or a free-form note depending on context
+- `@example` → `# Examples` section; code inside it is **automatically tested** by `cargo test` (doctest) — so prefer examples that actually compile and run
+- The `# Arguments`, `# Returns`, etc. sections are a community convention (not enforced by the compiler), but this is the standard followed by the stdlib and most published crates
 
 ### Commit Messages
 

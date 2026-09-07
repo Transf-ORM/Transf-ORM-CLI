@@ -22,6 +22,10 @@ Describe what changes should be made and how.
 
 Which parts of the codebase will be affected?
 
+## Dependencies
+
+Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank if none -->
+
 ## Acceptance Criteria
 
 How will you know this refactoring is complete? What must be true for this to be considered done?

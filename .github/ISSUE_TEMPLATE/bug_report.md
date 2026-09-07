@@ -34,6 +34,10 @@ A clear description of what actually happened.
 
 If applicable, add logs or screenshots to help explain the problem.
 
+## Dependencies
+
+Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank if none -->
+
 ## Acceptance Criteria
 
 How will you know this bug is fixed? What must be true for this to be considered resolved?
