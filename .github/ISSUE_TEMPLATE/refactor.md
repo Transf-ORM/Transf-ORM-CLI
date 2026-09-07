@@ -8,11 +8,8 @@ assignees: ''
 
 ## Description
 
-What needs to be refactored, and why — the current situation and its problems.
-
-## Proposed changes
-
-What should change and how. Which parts of the codebase are affected.
+What needs to be refactored and why — the current situation, its problems, and roughly
+what should change. Link the relevant wiki page if any.
 
 ## Dependencies
 
