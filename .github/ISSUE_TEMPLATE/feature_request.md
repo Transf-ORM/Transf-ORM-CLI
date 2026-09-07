@@ -8,12 +8,8 @@ assignees: ''
 
 ## Description
 
-What the feature is, and why it is needed — the problem it solves. Link the relevant
-wiki page or spec section if any.
-
-## Proposed solution
-
-How it should work. Mention any alternatives considered and why they were dropped.
+What the feature is and why it is needed — the problem it solves, and roughly how it
+should work. Link the relevant wiki page or spec section if any.
 
 ## Dependencies
 
@@ -33,4 +29,4 @@ Steps a reviewer runs on the PR branch to confirm it works (commands + expected 
 
 ## Additional context
 
-Anything else: references, mockups, examples.
+Anything else: references, mockups, examples, alternatives considered.

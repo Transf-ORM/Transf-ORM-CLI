@@ -6,21 +6,11 @@ labels: design
 assignees: ''
 ---
 
-## Summary
+## Description
 
-A clear description of the design work needed.
-
-## Goal & context
-
-What problem does this solve for the user? Which flow or screen does it belong to?
-
-## Scope
-
-Which screens, components, or states are covered (and which are explicitly out of scope).
-
-## Deliverables
-
-Where the output lives and what form it takes (Figma file/frame, token doc, interaction specs, prototype link...).
+What the design work is and why it is needed — which flow or screen it belongs to, what
+is in and out of scope, and where the output lives (Figma frame, token doc, prototype
+link...).
 
 ## Dependencies
 
@@ -28,14 +18,17 @@ Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank i
 
 ## Acceptance Criteria
 
-How will you know this design is complete? What must be true for this to be considered done?
+Testable conditions that must all be true for this issue to be considered done.
 
 - [ ]
 
 ## Verification guide
 
-How a reviewer checks the result (e.g. open the Figma frame, walk the prototype along a flow, run the contrast audit).
+How a reviewer checks the result (e.g. open the Figma frame, walk the prototype along a
+flow, run the contrast audit).
+
+1.
 
 ## Additional context
 
-Add any other context, references, or inspiration here.
+References, inspiration, constraints.
