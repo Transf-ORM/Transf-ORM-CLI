@@ -107,20 +107,13 @@ Acceptance Criteria are clear, testable conditions that must be met for the PR t
 
 ### Documentation
 
-We use **rustdoc** for documentation — it is built into Cargo and is the Rust standard. Do not use Doxygen tags (`@brief`, `@param`, etc.); they are not supported by rustdoc.
-
-Generate and open the documentation locally with:
-
-```bash
-cargo doc --open
-```
-
-Follow this format for all public items:
+We use `cargo doc` (rustdoc) for function documentation. Please follow this format for all public items:
 
 ```rust
-/// One-line summary of what this function does.
+/// Brief description of what this function does.
 ///
-/// Optional longer explanation of purpose and behavior.
+/// More detailed explanation of the function's purpose and behavior,
+/// if needed.
 ///
 /// # Arguments
 ///
@@ -129,33 +122,35 @@ Follow this format for all public items:
 ///
 /// # Returns
 ///
-/// Description of the return value.
+/// Description of the return value
 ///
 /// # Errors
 ///
-/// Describe when and why this function returns an `Err`.
+/// Describes the cases where the function returns an error (if applicable, e.g. `Result`)
+///
+/// # Panics
+///
+/// Describes the cases where the function may panic (if applicable)
 ///
 /// # Examples
 ///
 /// ```
-/// use transf_orm_cli::pivot::{Schema, DatabaseKind};
-///
-/// let schema = Schema::new(DatabaseKind::PostgreSql);
-/// let json = schema.to_canonical_json().unwrap();
+/// let result = my_function(value1, value2);
+/// assert_eq!(result, expected);
 /// ```
-pub fn my_function(param1: Type, param2: Type) -> Result<ReturnType, Error> {
+pub fn my_function(param1: Type, param2: Type) -> ReturnType {
     // implementation
 }
 ```
-
-**Standard rustdoc sections** (use only when relevant):
-
-- `# Arguments` — document parameters
-- `# Returns` — document the return value
-- `# Errors` — document `Err` cases for `Result`-returning functions
-- `# Panics` — document conditions that cause a panic
-- `# Safety` — required for `unsafe` functions
-- `# Examples` — usage examples, **executed as tests** by `cargo test`
+ 
+### Notes on the format
+ 
+- `@brief` → simply the first line of the comment (rustdoc automatically treats the first sentence as the summary)
+- `@param` → `# Arguments` section with bullet points
+- `@return` → `# Returns` section
+- `@note` → can become `# Panics`, `# Errors`, or a free-form note depending on context
+- `@example` → `# Examples` section; code inside it is **automatically tested** by `cargo test` (doctest) — so prefer examples that actually compile and run
+- The `# Arguments`, `# Returns`, etc. sections are a community convention (not enforced by the compiler), but this is the standard followed by the stdlib and most published crates
 
 ### Commit Messages
 
