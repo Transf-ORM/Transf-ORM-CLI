@@ -22,6 +22,10 @@ Describe how you think this feature should work.
 
 Any alternative solutions or features you've considered.
 
+## Dependencies
+
+Blocked by: <!-- e.g. #12, #13 — issues that must be done first; leave blank if none -->
+
 ## Acceptance Criteria
 
 How will you know this feature is complete? What must be true for this to be considered done?
