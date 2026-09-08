@@ -1,0 +1,4 @@
+# These owners are requested for review on every pull request.
+# GitHub only counts approvals from people with write access toward
+# required-approval checks, regardless of what's listed here.
+* @AymericJM @Babouye @nitrached @Timeotr @tuturicide
