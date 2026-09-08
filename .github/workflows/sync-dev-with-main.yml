@@ -1,0 +1,29 @@
+name: Sync dev with main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-dev:
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: dev
+          fetch-depth: 0
+          # The default GITHUB_TOKEN can never bypass ruleset "require a
+          # pull request" checks, no matter what's in the bypass list.
+          # This PAT belongs to an org admin who already has bypass, so
+          # pushes authenticated with it go through.
+          token: ${{ secrets.SYNC_DEV_TOKEN }}
+
+      - name: Merge main into dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main --no-edit
+          git push origin dev

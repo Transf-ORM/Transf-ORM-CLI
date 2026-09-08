@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.3.3...cli-v0.3.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* remove unnecessary id-token permission and debug steps from npm publish workflow ([9220f2b](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/9220f2b3fde71aefd748c2e52c75eee82c38b6b1))
+
 ## [0.3.3](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.3.2...cli-v0.3.3) (2026-03-18)
 
 
