@@ -11,5 +11,7 @@
   "release-type": "node",
   "bump-minor-pre-major": false,
   "bump-patch-for-minor-pre-major": false,
-  "prerelease": false
+  "prerelease": false,
+  "commit-search-depth": 100,
+  "release-search-depth": 50
 }
