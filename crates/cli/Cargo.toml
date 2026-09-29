@@ -1,8 +1,8 @@
 [package]
 name = "transf-orm-cli"
-version = "0.0.1"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
+clap.workspace = true
 transf-orm-core = { path = "../core" }

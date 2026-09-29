@@ -3,7 +3,7 @@ use transf_orm_core::registry;
 
 #[derive(Parser)]
 #[command(name = "transf-orm", about = "ORM schema converter")]
-pub struct Cli {
+struct Cli {
     #[command(subcommand)]
     command: Command,
 }
