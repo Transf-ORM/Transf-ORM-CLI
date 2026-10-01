@@ -86,7 +86,7 @@ pub enum RelationKind {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_cli::pivot::relation::{
+/// use transf_orm_core::pivot::relation::{
 ///     CascadeOptions, JunctionTable, Relation, RelationKind,
 /// };
 ///

@@ -1,0 +1,8 @@
+[package]
+name = "transf-orm-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+clap.workspace = true
+transf-orm-core = { path = "../core" }
