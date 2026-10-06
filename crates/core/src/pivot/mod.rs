@@ -144,7 +144,7 @@ pub struct Sequence {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_cli::pivot::{DatabaseKind, Schema};
+/// use transf_orm_core::pivot::{DatabaseKind, Schema};
 ///
 /// let schema = Schema::new(DatabaseKind::PostgreSql);
 /// let json = schema.to_canonical_json().unwrap();

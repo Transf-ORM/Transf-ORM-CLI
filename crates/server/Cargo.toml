@@ -1,0 +1,7 @@
+[package]
+name = "transf-orm-server"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+transf-orm-core = { path = "../core" }
