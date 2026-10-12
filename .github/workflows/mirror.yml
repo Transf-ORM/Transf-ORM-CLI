@@ -12,7 +12,8 @@ env:
 
 jobs:
   mirroring:
-    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
+    # Dependabot runs don't get MIRROR_SSH_KEY (only Dependabot secrets are exposed)
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

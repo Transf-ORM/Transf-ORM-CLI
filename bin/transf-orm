@@ -4,6 +4,6 @@ set -euo pipefail
 # Resolve the real script path because npm runs bins through node_modules/.bin symlinks.
 SCRIPT_PATH="$(readlink -f "$0")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
-BIN_PATH="$SCRIPT_DIR/../target/release/transf-orm-cli"
+BIN_PATH="$SCRIPT_DIR/../target/release/transf-orm"
 
 exec "$BIN_PATH" "$@"

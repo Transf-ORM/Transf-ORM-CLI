@@ -413,7 +413,7 @@ fn db_type_hints_uuid_and_date() {
 }
 #[test]
 fn parse_full_test_schema() {
-    let input = include_str!("../../../test.prisma");
+    let input = include_str!("../../../../../test.prisma");
     let schema = parse_schema(input).expect("test.prisma should parse without error");
     // Database
     assert_eq!(schema.database, DatabaseKind::PostgreSql);

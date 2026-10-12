@@ -30,7 +30,8 @@ jobs:
         run: cargo audit
 
   gitleaks:
-    if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
+    # Dependabot runs don't get GITLEAKS_LICENSE (only Dependabot secrets are exposed)
+    if: github.repository == 'Transf-ORM/Transf-ORM-CLI' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -27,7 +27,26 @@ impl super::Importer for PrismaImporter {
 /// # Errors
 ///
 /// Returns [`ImportError::Parse`] if the input is not valid PSL, or
-/// [`ImportError::Schema`] if the schema is structurally invalid.
+/// [`ImportError::Schema`] if the schema is structurally invalid (e.g. a
+/// field references a model that does not exist).
+///
+/// # Examples
+///
+/// ```
+/// use transf_orm_core::importer::prisma::parse_schema;
+///
+/// let input = r#"
+///   datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+///   model User {
+///     id    Int    @id @default(autoincrement())
+///     email String @unique
+///   }
+/// "#;
+///
+/// let schema = parse_schema(input).unwrap();
+/// assert_eq!(schema.tables.len(), 1);
+/// assert_eq!(schema.tables[0].name, "User");
+/// ```
 pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
     let pairs = PrismaParser::parse(Rule::schema, input)?;
 

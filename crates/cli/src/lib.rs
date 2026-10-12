@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use transf_orm_cli::registry;
+use transf_orm_core::registry;
 
 #[derive(Parser)]
 #[command(name = "transf-orm", about = "ORM schema converter")]
@@ -14,13 +14,14 @@ enum Command {
     Convert {
         /// Path to the schema file or directory
         path: std::path::PathBuf,
+
         /// Force the source ORM format (skips detection and confirmation)
         #[arg(long, value_name = "ORM")]
         from: Option<String>,
     },
 }
 
-fn main() {
+pub fn run() {
     let cli = Cli::parse();
 
     match cli.command {
@@ -41,12 +42,15 @@ fn main() {
                     eprintln!("Use --from to specify: transf-orm convert --from <orm> {path_str}");
                     std::process::exit(1);
                 });
+
                 if !detected.certain {
                     eprint!(
                         "Detected: {} — press Enter to confirm, Ctrl+C to cancel: ",
                         detected.display_name
                     );
+
                     let mut input = String::new();
+
                     if std::io::stdin().read_line(&mut input).is_err() || !input.trim().is_empty() {
                         eprintln!(
                             "Use --from to specify: transf-orm convert --from <orm> {path_str}"
@@ -54,6 +58,7 @@ fn main() {
                         std::process::exit(1);
                     }
                 }
+
                 detected
             };
 
@@ -74,6 +79,7 @@ fn main() {
                         .to_canonical_json()
                         .expect("failed to serialize schema to JSON")
                 ),
+
                 Err(e) => {
                     eprintln!("error: {e}");
                     std::process::exit(1);
