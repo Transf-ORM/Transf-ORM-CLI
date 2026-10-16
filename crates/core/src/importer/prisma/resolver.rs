@@ -1,7 +1,9 @@
 use std::collections::{HashMap, HashSet};
 
 use super::ast::{RawAttr, RawModel, RawTypeAlias, RawValue};
+use super::behaviors;
 use super::mappers;
+
 use crate::pivot::metadata::{OrmKind, OrmMetadata, UnknownFeature};
 use crate::pivot::relation::{
     CascadeOptions, ForeignKey, JunctionTable, ReferentialAction, Relation, RelationKind,
@@ -13,7 +15,6 @@ use crate::pivot::types::{ColumnType, ScalarType};
 use crate::pivot::view::{View, ViewColumn};
 
 // ── Structs ────────────────────────────────────────────────────────────────
-
 struct RelInfo {
     owner: String,
     target: String,
@@ -26,7 +27,6 @@ struct RelInfo {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-
 fn push_unknown_attrs(
     metadata: &mut OrmMetadata,
     attrs: &[RawAttr],
@@ -45,7 +45,6 @@ fn push_unknown_attrs(
 }
 
 // ── Resolvers ──────────────────────────────────────────────────────────────
-
 pub(super) fn resolve_views(
     raw_views: Vec<RawModel>,
     enum_names: &HashSet<String>,
@@ -55,7 +54,6 @@ pub(super) fn resolve_views(
         .into_iter()
         .map(|raw| {
             let (db_name, db_schema) = mappers::extract_db_naming(&raw);
-
             let columns = raw
                 .fields
                 .iter()
@@ -70,7 +68,6 @@ pub(super) fn resolve_views(
                     }
                 })
                 .collect();
-
             let mut metadata = OrmMetadata {
                 source_orm: Some(OrmKind::Prisma),
                 ..Default::default()
@@ -82,7 +79,6 @@ pub(super) fn resolve_views(
                     recoverable: true,
                 });
             }
-
             let ignored: Vec<String> = raw
                 .fields
                 .iter()
@@ -96,7 +92,6 @@ pub(super) fn resolve_views(
                     recoverable: true,
                 });
             }
-
             const KNOWN_VIEW_BLOCK_ATTRS: &[&str] = &["map", "schema", "ignore"];
             push_unknown_attrs(
                 &mut metadata,
@@ -104,9 +99,7 @@ pub(super) fn resolve_views(
                 KNOWN_VIEW_BLOCK_ATTRS,
                 "prisma.",
             );
-
             let _ = (enum_names, type_aliases); // view columns not resolved into IR scalars yet
-
             Ok(View {
                 name: raw.name.clone(),
                 db_name,
@@ -128,13 +121,11 @@ pub(super) fn resolve_models(
 ) -> Result<Vec<Table>, super::super::ImportError> {
     let mut rel_infos: Vec<RelInfo> = Vec::new();
     let mut implicit_m2m: Vec<(String, String, Option<String>)> = Vec::new();
-
     for raw in &raw_models {
         for field in &raw.fields {
             if !model_names.contains(&field.base_type) {
                 continue;
             }
-
             if let Some(rel_attr) = field.attr("relation") {
                 let owner_cols = rel_attr
                     .named("fields")
@@ -143,7 +134,6 @@ pub(super) fn resolve_models(
                 if owner_cols.is_empty() {
                     continue;
                 }
-
                 let rel_name = rel_attr
                     .named("name")
                     .and_then(|v| v.as_str().map(String::from))
@@ -152,7 +142,6 @@ pub(super) fn resolve_models(
                             .positional(0)
                             .and_then(|v| v.as_str().map(String::from))
                     });
-
                 rel_infos.push(RelInfo {
                     owner: raw.name.clone(),
                     target: field.base_type.clone(),
@@ -193,7 +182,6 @@ pub(super) fn resolve_models(
                         })
                     })
                     .unwrap_or(false);
-
                 if other_is_array && !other_has_fk {
                     let mut pair = [raw.name.clone(), field.base_type.clone()];
                     pair.sort();
@@ -209,12 +197,10 @@ pub(super) fn resolve_models(
             }
         }
     }
-
     raw_models
         .iter()
         .map(|raw| {
             let mut table = build_scalar_table(raw, model_names, enum_names, type_aliases)?;
-
             for ri in rel_infos.iter().filter(|r| r.owner == raw.name) {
                 table.foreign_keys.push(ForeignKey {
                     name: ri.fk_name.clone(),
@@ -225,14 +211,12 @@ pub(super) fn resolve_models(
                     on_update: ri.on_update.clone(),
                 });
             }
-
             for ri in rel_infos
                 .iter()
                 .filter(|r| r.owner == raw.name || r.target == raw.name)
             {
                 let is_owner = ri.owner == raw.name;
                 let other_name = if is_owner { &ri.target } else { &ri.owner };
-
                 let back_field = raw_models
                     .iter()
                     .find(|m| &m.name == other_name)
@@ -252,7 +236,6 @@ pub(super) fn resolve_models(
                             }
                         })
                     });
-
                 let back_is_array = back_field.map(|f| f.is_array).unwrap_or(true);
                 let kind = if back_is_array {
                     RelationKind::OneToMany
@@ -261,7 +244,6 @@ pub(super) fn resolve_models(
                         owner_table: ri.owner.clone(),
                     }
                 };
-
                 table.relations.push(Relation {
                     name: ri.rel_name.clone(),
                     kind,
@@ -275,7 +257,6 @@ pub(super) fn resolve_models(
                     },
                 });
             }
-
             for (a, b, rel_name) in &implicit_m2m {
                 let (our_side, other_side) = if a == &raw.name {
                     (a, b)
@@ -304,7 +285,6 @@ pub(super) fn resolve_models(
                     },
                 });
             }
-
             Ok(table)
         })
         .collect()
@@ -317,7 +297,6 @@ fn build_scalar_table(
     type_aliases: &HashMap<String, RawTypeAlias>,
 ) -> Result<Table, super::super::ImportError> {
     let (db_name, db_schema) = mappers::extract_db_naming(raw);
-
     let primary_key = raw.block_attr("id").map(|a| {
         let cols = mappers::extract_columns_from_attr(a);
         let name = a.named("map").and_then(|v| v.as_str().map(String::from));
@@ -326,7 +305,6 @@ fn build_scalar_table(
             columns: cols,
         }
     });
-
     let unique_constraints = raw
         .block_attrs_all("unique")
         .map(|a| {
@@ -338,7 +316,6 @@ fn build_scalar_table(
             }
         })
         .collect();
-
     let mut indexes: Vec<Index> = raw
         .block_attrs_all("index")
         .filter_map(|a| {
@@ -357,7 +334,6 @@ fn build_scalar_table(
             })
         })
         .collect();
-
     for a in raw.block_attrs_all("fulltext") {
         let cols_val = a.named("fields").or_else(|| a.positional(0));
         indexes.push(Index {
@@ -373,12 +349,10 @@ fn build_scalar_table(
             include: Vec::new(),
         });
     }
-
     let mut metadata = OrmMetadata {
         source_orm: Some(OrmKind::Prisma),
         ..Default::default()
     };
-
     if raw.block_attr("ignore").is_some() {
         metadata.unknown_features.push(UnknownFeature {
             name: "prisma.ignore".to_string(),
@@ -386,7 +360,6 @@ fn build_scalar_table(
             recoverable: true,
         });
     }
-
     const KNOWN_BLOCK_ATTRS: &[&str] = &[
         "map", "schema", "id", "unique", "index", "fulltext", "ignore",
     ];
@@ -396,7 +369,6 @@ fn build_scalar_table(
         KNOWN_BLOCK_ATTRS,
         "prisma.",
     );
-
     let mut table = Table {
         name: raw.name.clone(),
         db_name,
@@ -412,20 +384,16 @@ fn build_scalar_table(
         behaviors: Vec::new(),
         metadata,
     };
-
     let mut ignored_fields: Vec<String> = Vec::new();
-
     for field in &raw.fields {
         if model_names.contains(&field.base_type) {
             continue;
         }
-
         let alias = type_aliases.get(&field.base_type);
         let effective_base: &str = alias
             .map(|a| a.base_type.as_str())
             .unwrap_or(&field.base_type);
         let alias_attrs = alias.map(|a| a.attrs.as_slice()).unwrap_or(&[]);
-
         let scalar = if let Some(raw_type) = &field.unsupported_type {
             ScalarType::Unsupported {
                 type_name: raw_type.clone(),
@@ -441,25 +409,21 @@ fn build_scalar_table(
                 type_name: effective_base.to_string(),
             }
         };
-
         let db_hint = field
             .attrs
             .iter()
             .chain(alias_attrs.iter())
             .find(|a| a.path.starts_with("db."))
             .and_then(|a| mappers::map_db_hint(&a.path, &a.args));
-
         let default = field
             .attr("default")
             .or_else(|| alias_attrs.iter().find(|a| a.path == "default"))
             .and_then(|a| a.positional(0))
             .and_then(mappers::map_default_value);
-
         let db_name = field
             .attr("map")
             .and_then(|a| a.positional(0))
             .and_then(|v| v.as_str().map(String::from));
-
         table.columns.push(Column {
             name: field.name.clone(),
             db_name,
@@ -469,9 +433,8 @@ fn build_scalar_table(
                 array: field.is_array,
             },
             nullable: field.is_optional,
-            default,
+            default: default.clone(),
         });
-
         let id_attr = field
             .attr("id")
             .or_else(|| alias_attrs.iter().find(|a| a.path == "id"));
@@ -484,7 +447,6 @@ fn build_scalar_table(
                 columns: vec![field.name.clone()],
             });
         }
-
         let has_unique =
             field.attr("unique").is_some() || alias_attrs.iter().any(|a| a.path == "unique");
         if has_unique {
@@ -493,7 +455,6 @@ fn build_scalar_table(
                 columns: vec![field.name.clone()],
             });
         }
-
         let has_updated_at =
             field.attr("updatedAt").is_some() || alias_attrs.iter().any(|a| a.path == "updatedAt");
         if has_updated_at {
@@ -501,11 +462,12 @@ fn build_scalar_table(
                 column: field.name.clone(),
             });
         }
-
+        table
+            .behaviors
+            .extend(behaviors::detect_behaviors(field, effective_base, &default));
         if field.attr("ignore").is_some() {
             ignored_fields.push(field.name.clone());
         }
-
         const KNOWN_FIELD_ATTRS: &[&str] = &[
             "id",
             "default",
@@ -525,7 +487,6 @@ fn build_scalar_table(
             }
         }
     }
-
     if !ignored_fields.is_empty() {
         table.metadata.unknown_features.push(UnknownFeature {
             name: "prisma.ignoredFields".to_string(),
@@ -533,6 +494,5 @@ fn build_scalar_table(
             recoverable: true,
         });
     }
-
     Ok(table)
 }
