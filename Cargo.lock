@@ -322,7 +322,7 @@ dependencies = [
 
 [[package]]
 name = "transf-orm"
-version = "0.0.1"
+version = "0.3.4"
 dependencies = [
  "clap",
  "transf-orm-cli",
@@ -332,7 +332,7 @@ dependencies = [
 
 [[package]]
 name = "transf-orm-cli"
-version = "0.0.1"
+version = "0.3.4"
 dependencies = [
  "clap",
  "transf-orm-core",
@@ -340,7 +340,7 @@ dependencies = [
 
 [[package]]
 name = "transf-orm-core"
-version = "0.0.1"
+version = "0.3.4"
 dependencies = [
  "pest",
  "pest_derive",
@@ -350,7 +350,7 @@ dependencies = [
 
 [[package]]
 name = "transf-orm-server"
-version = "0.0.1"
+version = "0.3.4"
 dependencies = [
  "clap",
  "transf-orm-core",
