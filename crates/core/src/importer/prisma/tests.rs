@@ -658,7 +658,7 @@ fn string_escape_sequences_in_map_and_default() {
         datasource db { provider = "postgresql" url = env("DATABASE_URL") }
         model Post {
           id    Int    @id
-          label String @default("hello \\"world\\"") @map("post_label")
+          label String @default("hello \"world\"") @map("post_label")
         }
     "#;
     let schema = parse_schema(input).unwrap();
