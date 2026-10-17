@@ -28,12 +28,12 @@ cd Transf-ORM-CLI
 cargo build --release
 ```
 
-The binary will be available at `./target/release/transf-orm-cli`
+The binary will be available at `./target/release/transf-orm`
 
 ### Add to PATH
 
 ```bash
-cp ./target/release/transf-orm-cli /usr/local/bin/
+cp ./target/release/transf-orm /usr/local/bin/
 ```
 
 ## Usage
@@ -41,20 +41,64 @@ cp ./target/release/transf-orm-cli /usr/local/bin/
 ### Basic Command
 
 ```bash
-transf-orm-cli [OPTIONS] [COMMAND]
+transf-orm [OPTIONS] [COMMAND]
 ```
+
+### Modes
+
+The binary runs in one of two modes:
+
+| Mode | How to run it | Status |
+|------|---------------|--------|
+| CLI | `transf-orm`, `transf-orm --cli` or `transf-orm <command>` | Commands available; the interactive mode (no command) is not implemented yet and prints a placeholder message |
+| Server | `transf-orm --serveur [--port <PORT>]` | Only logs its startup for now |
+
+`--cli` and `--serveur` cannot be combined, and `--serveur` cannot be used with a command.
+
+### Global Flags
+
+Global flags apply to both modes and can be placed anywhere on the command line.
+
+| Flag | Description | Status |
+|------|-------------|--------|
+| `--cli` | Run the CLI mode (default when no mode is given) | Available |
+| `--serveur` | Run the server mode | Available |
+| `--debug <LEVEL>` | Log level: `error`, `warn`, `info`, `debug` or `trace` (case-insensitive) | Parsed, no effect yet |
+| `--verbose` | Print extra progress information | Parsed, no effect yet |
+| `--perf` | Report performance metrics | Parsed, no effect yet |
+| `--tts` | Read CLI feedback aloud (text-to-speech) | Parsed, no effect yet |
+| `--daltonien` | Use a colour-blind-friendly palette | Parsed, no effect yet |
+| `-h`, `--help` | Print help | Available |
+| `-V`, `--version` | Print the version | Available |
+
+An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` with `--serveur`, `--serveur` with a command, `--port` without `--serveur`) prints an error and exits with code `2`.
+
+### Server Flags
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--port <PORT>` | Port to listen on (`0` = any free port). Requires `--serveur` | `3000` |
 
 ### Examples
 
 ```bash
-# Display help
-transf-orm-cli --help
+# Display help (modes, global flags and commands)
+transf-orm --help
+
+# Display the version
+transf-orm --version
+
+# Convert a Prisma schema to the pivot IR, with a global flag
+transf-orm --verbose convert schema.prisma
+
+# Start the server mode on a given port
+transf-orm --serveur --port 8080
 
 # Transform a schema
-transf-orm-cli transform --input schema.orm --output schema.sql
+transf-orm transform --input schema.orm --output schema.sql
 
 # Validate a schema
-transf-orm-cli validate --file schema.orm
+transf-orm validate --file schema.orm
 ```
 
 ## Configuration
