@@ -161,7 +161,7 @@ pub enum DbHint {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_cli::pivot::types::{ColumnType, DbHint, ScalarType};
+/// use transf_orm_core::pivot::types::{ColumnType, DbHint, ScalarType};
 ///
 /// // Prisma: String @db.VarChar(255)
 /// let col = ColumnType {
@@ -228,7 +228,7 @@ pub enum DefaultFn {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_cli::pivot::types::{DefaultFn, DefaultValue, LiteralValue};
+/// use transf_orm_core::pivot::types::{DefaultFn, DefaultValue, LiteralValue};
 ///
 /// let created_at = DefaultValue::Function(DefaultFn::Now);
 /// let status     = DefaultValue::Literal(LiteralValue::String("active".to_string()));

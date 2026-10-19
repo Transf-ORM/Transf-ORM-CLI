@@ -1,0 +1,10 @@
+[package]
+name = "transf-orm-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+pest.workspace = true
+pest_derive.workspace = true

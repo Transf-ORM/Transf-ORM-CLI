@@ -8,7 +8,7 @@
   },
   "files": [
     "bin/transf-orm",
-    "target/release/transf-orm-cli",
+    "target/release/transf-orm",
     "README.md",
     "LICENSE"
   ],

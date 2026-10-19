@@ -31,7 +31,7 @@ pub enum OrmKind {
 /// Prisma's `@ignore` attribute has no Drizzle equivalent:
 ///
 /// ```
-/// use transf_orm_cli::pivot::metadata::UnknownFeature;
+/// use transf_orm_core::pivot::metadata::UnknownFeature;
 ///
 /// let feature = UnknownFeature {
 ///     name: "prisma.ignore".to_string(),
