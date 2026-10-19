@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.4.0](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.3.4...cli-v0.4.0) (2026-10-19)
+
+
+### Features
+
+* **cli:** add global flags and --cli / --serveur dispatch ([e055b2e](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/e055b2e2e3882cb7bf49931886ac9202eba87770))
+* **cli:** add global flags and --cli / --serveur dispatch ([bfafc60](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/bfafc607d5a9a412f3ac0375ee11b8f393cdc03e))
+* **cli:** rewrite CLI with clap and ORM detection ([1cf7f05](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/1cf7f05c58d500eff7d710a9b58d2e0a5dd06f38))
+* **exporter:** add Exporter trait and error types ([187a40e](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/187a40e9653219bb1f192d320d869896636f5c5a))
+* **importer:** add Importer trait ([a05cd87](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/a05cd8762cde2ee7536651dd924cbfdb22a06573))
+* **importer:** detect createdAt, softDelete and versioning behaviors in prisma ([#195](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/195)) ([59e2690](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/59e26904d7ceb1664c261526d9719ea06cb219d9)), closes [#82](https://github.com/Transf-ORM/Transf-ORM-CLI/issues/82)
+* **importer:** implement Prisma schema importer in 4 focused modules ([c767448](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/c76744842414a158c53188a67914851b510df1b6))
+* **importer:** implement PrismaImporter struct ([efe9b6b](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/efe9b6b882a74d5af9212ad7fc6cca60427ea26f))
+* pivot IR, Prisma importer, ORM registry and initial CLI ([f8a8bf3](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/f8a8bf35fff281282ce600fe666f91b54b33f412))
+* **pivot:** complete scalar types, db hints, and behaviors ([ca35197](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/ca3519764c0d875f94e0eba3f15fc4fbfa0a56d5))
+* **pivot:** implement IR type definitions with rustdoc documentation ([276ba8f](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/276ba8f47026ec4afcd7db3e967618df6e4a8b35))
+* **prisma:** detect createdAt softDelete and versioning behaviors ([c82105c](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/c82105c9c2f10ebedc668cf8b9caf7d79c8ba6f5))
+* **registry:** add ORM registry system ([1b0f012](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/1b0f01266ad1270ebc76ac9cdef42e194e37a65b))
+
+
+### Bug Fixes
+
+* **importer:** restore escaped quotes in prisma string escape test ([e684a81](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/e684a81536f1ff6f13f093fb8d4ba32af829701b))
+* **release:** sync crate version with release-please and ship the transf-orm binary ([d44100f](https://github.com/Transf-ORM/Transf-ORM-CLI/commit/d44100fa9e60a5825531182a62329073cfd02ad6))
+
 ## [0.3.4](https://github.com/Transf-ORM/Transf-ORM-CLI/compare/cli-v0.3.3...cli-v0.3.4) (2026-03-18)
 
 
