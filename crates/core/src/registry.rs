@@ -34,12 +34,21 @@ pub static ORMS: &[OrmDescriptor] = &[OrmDescriptor {
 /// Detect the ORM from a file path's extension.
 pub fn detect(path: &str) -> Option<&'static OrmDescriptor> {
     let ext = std::path::Path::new(path).extension()?.to_str()?;
-    ORMS.iter().find(|o| o.extensions.contains(&ext))
+    let orm = ORMS.iter().find(|o| o.extensions.contains(&ext));
+    tracing::debug!(
+        path,
+        ext,
+        orm = orm.map(|o| o.name),
+        "detected ORM from extension"
+    );
+    orm
 }
 
 /// Find an ORM descriptor by its CLI name (case-insensitive).
 pub fn find_by_name(name: &str) -> Option<&'static OrmDescriptor> {
-    ORMS.iter().find(|o| o.name.eq_ignore_ascii_case(name))
+    let orm = ORMS.iter().find(|o| o.name.eq_ignore_ascii_case(name));
+    tracing::debug!(name, found = orm.is_some(), "looked up ORM by name");
+    orm
 }
 
 /// List CLI names of all known ORMs.

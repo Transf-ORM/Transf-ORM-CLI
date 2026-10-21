@@ -61,6 +61,18 @@ impl FromStr for DebugLevel {
     }
 }
 
+impl From<DebugLevel> for tracing::level_filters::LevelFilter {
+    fn from(level: DebugLevel) -> Self {
+        match level {
+            DebugLevel::Error => Self::ERROR,
+            DebugLevel::Warn => Self::WARN,
+            DebugLevel::Info => Self::INFO,
+            DebugLevel::Debug => Self::DEBUG,
+            DebugLevel::Trace => Self::TRACE,
+        }
+    }
+}
+
 /// Options set by the global flags of the `transf-orm` binary.
 ///
 /// Shared by the CLI and server modes so both read the same settings.
@@ -98,5 +110,22 @@ mod tests {
     fn debug_level_rejects_unknown_value() {
         let err = "verbose".parse::<DebugLevel>().unwrap_err();
         assert!(err.contains("error, warn, info, debug, trace"));
+    }
+
+    #[test]
+    fn debug_level_maps_to_tracing_filter() {
+        use tracing::level_filters::LevelFilter;
+
+        let filters: Vec<LevelFilter> = DebugLevel::ALL.into_iter().map(Into::into).collect();
+        assert_eq!(
+            filters,
+            [
+                LevelFilter::ERROR,
+                LevelFilter::WARN,
+                LevelFilter::INFO,
+                LevelFilter::DEBUG,
+                LevelFilter::TRACE,
+            ]
+        );
     }
 }
