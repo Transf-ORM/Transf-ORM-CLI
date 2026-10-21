@@ -70,12 +70,28 @@ pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
                     .expect("a block pair always has an inner rule");
 
                 match inner.as_rule() {
-                    Rule::datasource_block => database = parser::extract_database_kind(inner),
-                    Rule::model_block => raw_models.push(parser::parse_model_block(inner)?),
-                    Rule::view_block => raw_views.push(parser::parse_model_block(inner)?),
-                    Rule::enum_block => enums.push(parser::parse_enum_block(inner)?),
+                    Rule::datasource_block => {
+                        database = parser::extract_database_kind(inner);
+                        tracing::debug!(?database, "parsed datasource");
+                    }
+                    Rule::model_block => {
+                        let model = parser::parse_model_block(inner)?;
+                        tracing::trace!(model = %model.name, "parsed model");
+                        raw_models.push(model);
+                    }
+                    Rule::view_block => {
+                        let view = parser::parse_model_block(inner)?;
+                        tracing::trace!(view = %view.name, "parsed view");
+                        raw_views.push(view);
+                    }
+                    Rule::enum_block => {
+                        let parsed = parser::parse_enum_block(inner)?;
+                        tracing::trace!(r#enum = %parsed.name, "parsed enum");
+                        enums.push(parsed);
+                    }
                     Rule::type_alias => {
                         let alias = parser::parse_type_alias(inner)?;
+                        tracing::trace!(alias = %alias.name, "parsed type alias");
                         type_aliases.insert(alias.name.clone(), alias);
                     }
                     _ => {}
@@ -85,6 +101,14 @@ pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
             _ => {}
         }
     }
+
+    tracing::debug!(
+        models = raw_models.len(),
+        views = raw_views.len(),
+        enums = enums.len(),
+        type_aliases = type_aliases.len(),
+        "parsed Prisma blocks"
+    );
 
     let model_names: HashSet<String> = raw_models.iter().map(|m| m.name.clone()).collect();
 
@@ -99,6 +123,13 @@ pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
     schema.tables = tables;
     schema.enums = enums;
     schema.views = views;
+
+    tracing::info!(
+        tables = schema.tables.len(),
+        views = schema.views.len(),
+        enums = schema.enums.len(),
+        "imported Prisma schema"
+    );
 
     Ok(schema)
 }

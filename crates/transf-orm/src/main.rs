@@ -1,3 +1,5 @@
+use std::io::IsTerminal;
+
 use clap::error::ErrorKind;
 use clap::{CommandFactory, Parser};
 use transf_orm_cli::Command;
@@ -56,6 +58,10 @@ fn dispatch(args: Args) {
         daltonien: args.daltonien,
     };
 
+    if let Some(level) = config.debug {
+        init_logging(level);
+    }
+
     if args.serveur {
         if args.command.is_some() {
             Args::command()
@@ -69,4 +75,17 @@ fn dispatch(args: Args) {
     } else {
         transf_orm_cli::run(&config, args.command);
     }
+}
+
+/// Sends the internal `tracing` logs to stderr, up to `level`.
+///
+/// Only called with `--debug`: without it no subscriber is installed and the
+/// output stays unchanged.
+fn init_logging(level: DebugLevel) {
+    tracing_subscriber::fmt()
+        .with_writer(std::io::stderr)
+        .with_max_level(level)
+        .with_ansi(std::io::stderr().is_terminal())
+        .without_time()
+        .init();
 }
