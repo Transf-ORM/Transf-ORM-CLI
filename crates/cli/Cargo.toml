@@ -7,3 +7,6 @@ edition.workspace = true
 tracing.workspace = true
 clap.workspace = true
 transf-orm-core = { path = "../core" }
+ratatui = "0.30"
+unicode-width = "0.2"
+shell-words = "1"

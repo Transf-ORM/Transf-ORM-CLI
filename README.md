@@ -16,7 +16,7 @@ A powerful command-line tool for transforming and managing ORM schemas with ease
 | ✅ | **ORM auto-detection** | Source ORM detected from the file extension, or forced with `--from` |
 | ✅ | **Execution modes** | A single binary with two modes: CLI (default, `--cli`) and server (`--serveur`) |
 | 🚧 | **Global flags** | `--verbose` (progress steps) and `--debug <LEVEL>` (internal logs) work; `--perf`, `--tts` and `--daltonien` are accepted but have no effect yet |
-| 📋 | **Interactive CLI** | Interactive prompt that shows the ORM detected in the current directory |
+| 🚧 | **Interactive CLI** | `transf-orm` opens a full-screen terminal interface that shows the ORM detected in the current directory, with a `/` command menu and command history; `transform`, `history` and `revert` are planned |
 | 📋 | **HTTP server** | REST API served by `--serveur` (currently only logs its startup) |
 | 🚧 | **Drizzle import** | Drizzle schema parsing into the pivot |
 | 📋 | **ORM export** | Pivot → Prisma, Drizzle, then TypeORM and other SQL ORMs |
@@ -70,7 +70,7 @@ The binary runs in one of two modes:
 
 | Mode | How to run it | Status |
 |------|---------------|--------|
-| CLI | `transf-orm`, `transf-orm --cli` or `transf-orm <command>` | ✅ commands · 📋 interactive mode (without a command, prints a placeholder message) |
+| CLI | `transf-orm`, `transf-orm --cli` or `transf-orm <command>` | ✅ commands · 🚧 interactive mode (without a command) |
 | Server | `transf-orm --serveur [--port <PORT>]` | 📋 only logs its startup for now |
 
 `--cli` and `--serveur` cannot be combined, and `--serveur` cannot be used with a command.
@@ -78,6 +78,10 @@ The binary runs in one of two modes:
 ### Examples
 
 ```bash
+# Open the interactive mode in the current directory: shows the detected ORM,
+# then type commands (`convert` uses the detected schema), `/` for the menu, `/exit` to quit
+transf-orm
+
 # Display help (modes, global flags and commands)
 transf-orm --help
 
@@ -86,6 +90,9 @@ transf-orm --version
 
 # Convert a Prisma schema to the pivot IR (canonical JSON on stdout)
 transf-orm convert schema.prisma
+
+# Without a path, convert the schema detected in the current directory
+transf-orm convert
 
 # Save the pivot to a file
 transf-orm convert schema.prisma > pivot.json
@@ -110,7 +117,7 @@ transf-orm --serveur --port 8080
 
 | Status | Command | Description |
 |--------|---------|-------------|
-| ✅ | `convert <path>` | Import a schema into the pivot IR |
+| ✅ | `convert [<path>]` | Import a schema into the pivot IR (default: the schema detected in the current directory) |
 | 📋 | `convert --to <orm>` | Convert a schema to another ORM |
 | 📋 | `generate` | Generate TypeScript types, Zod validators, SQL DDL |
 | 📋 | `diff` / `merge` | Compare and merge schema versions |
