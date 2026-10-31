@@ -1,4 +1,6 @@
-use std::process::{Command, Output};
+use std::io::{BufRead, BufReader, Read, Write};
+use std::net::{TcpListener, TcpStream};
+use std::process::{Command, Output, Stdio};
 
 const VERBOSE_SCHEMA: &str = "tests/fixtures/verbose.prisma";
 
@@ -80,10 +82,81 @@ fn cli_mode_runs_commands() {
 }
 
 #[test]
-fn serveur_flag_starts_server() {
-    let output = run(&["--serveur", "--port", "0", "--debug", "info"]);
-    assert!(output.status.success());
-    assert!(stderr(&output).contains("Starting transf-orm server on port 0"));
+fn serveur_flag_serves_health() {
+    let mut child = Command::new(env!("CARGO_BIN_EXE_transf-orm"))
+        .args(["--serveur", "--port", "0"])
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("failed to run the transf-orm binary");
+
+    let mut line = String::new();
+    BufReader::new(child.stderr.take().unwrap())
+        .read_line(&mut line)
+        .unwrap();
+    let addr = line
+        .trim()
+        .strip_prefix("Listening on http://")
+        .unwrap_or_else(|| panic!("unexpected startup line: {line}"))
+        .to_owned();
+
+    let mut stream = TcpStream::connect(&addr).unwrap();
+    stream
+        .write_all(b"GET /health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
+        .unwrap();
+    let mut response = String::new();
+    stream.read_to_string(&mut response).unwrap();
+    child.kill().unwrap();
+    child.wait().unwrap();
+
+    assert!(response.starts_with("HTTP/1.1 200 OK"), "{response}");
+    assert!(response.ends_with(r#"{"status":"ok"}"#), "{response}");
+}
+
+#[test]
+fn serveur_host_prints_public_url() {
+    let mut child = Command::new(env!("CARGO_BIN_EXE_transf-orm"))
+        .args([
+            "--serveur",
+            "--ip",
+            "127.0.0.1",
+            "--port",
+            "0",
+            "--host",
+            "api.example.test",
+        ])
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("failed to run the transf-orm binary");
+
+    let mut lines = BufReader::new(child.stderr.take().unwrap()).lines();
+    let listening = lines.next().unwrap().unwrap();
+    let public = lines.next().unwrap().unwrap();
+    child.kill().unwrap();
+    child.wait().unwrap();
+
+    let port = listening
+        .strip_prefix("Listening on http://127.0.0.1:")
+        .unwrap_or_else(|| panic!("unexpected startup line: {listening}"));
+    assert_eq!(
+        public,
+        format!("Public URL: http://api.example.test:{port}")
+    );
+}
+
+#[test]
+fn invalid_ip_exits_with_2() {
+    let output = run(&["--serveur", "--ip", "not-an-ip"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(stderr(&output).contains("--ip"));
+}
+
+#[test]
+fn serveur_port_in_use_exits_with_1() {
+    let taken = TcpListener::bind("127.0.0.1:0").unwrap();
+    let port = taken.local_addr().unwrap().port().to_string();
+    let output = run(&["--serveur", "--port", &port]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(stderr(&output).contains("could not start the server"));
 }
 
 #[test]
@@ -106,6 +179,8 @@ fn conflicting_modes_exit_with_2() {
         Some(2)
     );
     assert_eq!(run(&["--port", "0"]).status.code(), Some(2));
+    assert_eq!(run(&["--ip", "127.0.0.1"]).status.code(), Some(2));
+    assert_eq!(run(&["--host", "example.test"]).status.code(), Some(2));
 }
 
 #[test]

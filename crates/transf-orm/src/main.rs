@@ -71,7 +71,10 @@ fn dispatch(args: Args) {
                 )
                 .exit();
         }
-        transf_orm_server::run(&config, args.server);
+        if let Err(err) = transf_orm_server::run(&config, args.server.into()) {
+            eprintln!("error: could not start the server: {err}");
+            std::process::exit(1);
+        }
     } else {
         transf_orm_cli::run(&config, args.command);
     }

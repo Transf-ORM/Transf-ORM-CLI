@@ -17,7 +17,7 @@ A powerful command-line tool for transforming and managing ORM schemas with ease
 | ✅ | **Execution modes** | A single binary with two modes: CLI (default, `--cli`) and server (`--serveur`) |
 | 🚧 | **Global flags** | `--verbose` (progress steps) and `--debug <LEVEL>` (internal logs) work; `--perf`, `--tts` and `--daltonien` are accepted but have no effect yet |
 | 📋 | **Interactive CLI** | Interactive prompt that shows the ORM detected in the current directory |
-| 📋 | **HTTP server** | REST API served by `--serveur` (currently only logs its startup) |
+| 🚧 | **HTTP server** | `--serveur` starts an axum server (`--ip`, `--port`, `--host`) exposing `GET /health`, with JSON errors and request logging; the REST API is planned |
 | 🚧 | **Drizzle import** | Drizzle schema parsing into the pivot |
 | 📋 | **ORM export** | Pivot → Prisma, Drizzle, then TypeORM and other SQL ORMs |
 | 📋 | **Code generation** | TypeScript types, Zod validators, SQL DDL from the pivot |
@@ -71,7 +71,7 @@ The binary runs in one of two modes:
 | Mode | How to run it | Status |
 |------|---------------|--------|
 | CLI | `transf-orm`, `transf-orm --cli` or `transf-orm <command>` | ✅ commands · 📋 interactive mode (without a command, prints a placeholder message) |
-| Server | `transf-orm --serveur [--port <PORT>]` | 📋 only logs its startup for now |
+| Server | `transf-orm --serveur [--ip <ADDRESS>] [--port <PORT>] [--host <HOST>]` | 🚧 serves `GET /health` · 📋 REST API |
 
 `--cli` and `--serveur` cannot be combined, and `--serveur` cannot be used with a command.
 
@@ -104,6 +104,11 @@ transf-orm --debug debug convert schema.prisma > pivot.json
 
 # Start the server mode on a given port
 transf-orm --serveur --port 8080
+curl localhost:8080/health   # {"status":"ok"}
+curl localhost:8080/nope     # 404 {"error":"not_found","message":"No route for GET /nope"}
+
+# Listen on every interface, behind a public hostname
+transf-orm --serveur --ip 0.0.0.0 --port 8080 --host api.example.com
 ```
 
 ### Planned Commands
@@ -141,15 +146,17 @@ Global flags apply to both modes and can be placed anywhere on the command line.
 
 `--verbose` and `--debug` only write to stderr, so the output on stdout (e.g. the JSON pivot) is the same with or without them. Without either flag, nothing extra is printed.
 
-An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` with `--serveur`, `--serveur` with a command, `--port` without `--serveur`) prints an error and exits with code `2`.
+An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` with `--serveur`, `--serveur` with a command, a server flag without `--serveur`) prints an error and exits with code `2`.
 
 ### Server Flags
 
 | Flag | Description | Default |
 |------|-------------|---------|
+| `--ip <ADDRESS>` | IPv4 or IPv6 address to listen on (`0.0.0.0` = every interface). Requires `--serveur` | `127.0.0.1` |
 | `--port <PORT>` | Port to listen on (`0` = any free port). Requires `--serveur` | `3000` |
+| `--host <HOST>` | Public hostname of the server; prints `Public URL: http://<HOST>:<PORT>` at startup. Requires `--serveur` | none |
 
-📋 `--ip <ADDRESS>` and `--host <HOST>` are planned.
+Errors are returned as JSON `{ "error": <code>, "message": <text> }` (`404` for an unknown route, `405` for a wrong method, `500` if a handler fails). Each request is logged with `--debug info` or higher.
 
 ### Command Options
 
@@ -172,7 +179,7 @@ An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` w
 │   │       ├── config.rs    # GlobalConfig: global flags shared by both modes
 │   │       └── registry.rs  # Known ORMs, detection, importer/exporter factories
 │   ├── cli/             # CLI mode: commands
-│   ├── server/          # Server mode: server flags, HTTP API (planned)
+│   ├── server/          # Server mode: server flags, HTTP server (axum + tokio)
 │   └── transf-orm/      # Binary: global flags parsing + --cli / --serveur dispatch
 │       └── tests/           # Integration tests on the real binary
 ├── bin/
