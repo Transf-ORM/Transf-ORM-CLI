@@ -17,7 +17,10 @@ pub struct ServerArgs {
 /// * `config` - Options from the global flags
 /// * `args` - Server-specific flags
 pub fn run(config: &GlobalConfig, args: ServerArgs) {
-    let _ = config; // consumed by the --verbose / --debug / --perf features
+    if config.verbose {
+        eprintln!("[verbose] Listening port: {}", args.port);
+    }
+    tracing::info!(port = args.port, "starting server");
 
     eprintln!("Starting transf-orm server on port {}", args.port);
 }
