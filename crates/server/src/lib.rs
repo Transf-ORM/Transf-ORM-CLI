@@ -1,3 +1,5 @@
+pub mod db;
+
 use transf_orm_core::config::GlobalConfig;
 
 /// Flags specific to the server mode.

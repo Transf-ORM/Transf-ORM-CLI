@@ -2,8 +2,15 @@
 name = "transf-orm-server"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 tracing.workspace = true
 clap.workspace = true
 transf-orm-core = { path = "../core" }
+sea-orm = { version = "2", default-features = false, features = ["macros", "sqlx-postgres", "runtime-tokio-rustls", "with-uuid", "with-chrono"] }
+uuid = { version = "1", features = ["v7"] }
+sea-orm-migration = { version = "2", default-features = false, features = ["sqlx-postgres", "runtime-tokio-rustls"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

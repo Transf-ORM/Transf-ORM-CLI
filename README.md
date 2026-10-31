@@ -29,8 +29,9 @@ Adding a new ORM only requires a new entry in [`crates/core/src/registry.rs`](cr
 
 ## Prerequisites
 
-- Rust 1.74 or later
+- Rust 1.94 or later (`rustup update stable`)
 - Cargo
+- Docker, only to run the server's database locally
 
 ## Installation
 
@@ -173,11 +174,13 @@ An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` w
 │   │       └── registry.rs  # Known ORMs, detection, importer/exporter factories
 │   ├── cli/             # CLI mode: commands
 │   ├── server/          # Server mode: server flags, HTTP API (planned)
+│   │   └── src/db/          # Persistence (SeaORM): entities, migrations
 │   └── transf-orm/      # Binary: global flags parsing + --cli / --serveur dispatch
 │       └── tests/           # Integration tests on the real binary
 ├── bin/
 │   └── transf-orm       # Shell wrapper used by the npm package
 ├── Cargo.toml           # Workspace manifest
+├── docker-compose.yml   # Development PostgreSQL for the server mode
 ├── package.json         # npm package (@transf-orm/cli)
 └── .github/
     ├── workflows/
@@ -220,6 +223,16 @@ Run tests with verbose output:
 ```bash
 cargo test -- --nocapture
 ```
+
+The server's database tests (`db_smoke`) need PostgreSQL. Start it with Docker; without it, they are skipped locally (and fail in CI):
+
+```bash
+docker compose up -d                        # PostgreSQL on localhost:5442
+cargo test -p transf-orm-server db_smoke
+docker compose down -v                      # stop it and delete its data
+```
+
+The port can be changed with `TRANSF_ORM_DB_PORT`; the tests then read the URL from `DATABASE_URL`.
 
 ## Security
 

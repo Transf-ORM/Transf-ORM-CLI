@@ -13,6 +13,23 @@ jobs:
   tests:
     if: github.repository == 'Transf-ORM/Transf-ORM-CLI'
     runs-on: ubuntu-latest
+    services:
+      # Database for the server's persistence tests (db_smoke), same setup as docker-compose.yml
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: transf_orm
+          POSTGRES_PASSWORD: transf_orm
+          POSTGRES_DB: transf_orm
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U transf_orm -d transf_orm"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+    env:
+      DATABASE_URL: postgres://transf_orm:transf_orm@localhost:5432/transf_orm
     steps:
       - uses: actions/checkout@v3
         env:
