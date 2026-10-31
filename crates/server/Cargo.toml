@@ -6,4 +6,11 @@ edition.workspace = true
 [dependencies]
 tracing.workspace = true
 clap.workspace = true
+serde_json.workspace = true
+axum = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "net", "signal"] }
 transf-orm-core = { path = "../core" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros"] }
+tower = { version = "0.5", features = ["util"] }
