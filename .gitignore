@@ -25,3 +25,5 @@ project.md
 CLAUDE.md
 .claude
 result
+# Generated benchmark schemas (benches/gen_schema.py)
+benches/schemas/
