@@ -9,6 +9,7 @@ Thank you for your interest in contributing to Transf-ORM-CLI! We welcome contri
 - [Making Changes](#making-changes)
 - [Testing](#testing)
 - [Submitting Changes](#submitting-changes)
+  - [Review Rules](#review-rules)
 - [Code Guidelines](#code-guidelines)
 - [Reporting Issues](#reporting-issues)
 
@@ -91,6 +92,21 @@ cargo test module_name
 
 - Keep PRs focused on a single feature or fix
 - Ensure all CI checks pass
+
+### Review Rules
+
+Every PR needs an approving review before it is merged:
+
+- **into `dev`**: one review by someone other than the PR author;
+- **into `main`**: review by the maintainer in charge of releases.
+
+Reviewers check that the PR follows its template (and actually verify what the description
+claims was changed), that the code is readable and documented with rustdoc, that the branch
+solves a single issue, that it is tested, and that it works when following the verification
+guide given in the issue or PR.
+
+These rules come from the team's organisation agreement:
+[`EIP/organisation/organisation-equipe.md`](EIP/organisation/organisation-equipe.md) (in French).
 
 ### What are Acceptance Criteria?
 
