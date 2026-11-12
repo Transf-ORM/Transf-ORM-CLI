@@ -9,16 +9,17 @@
 - **Persistance du serveur** : une couche SeaORM + PostgreSQL est en place sur la branche `90-spike-persistence-layer-orm` : première entité `users`, migrations, `docker-compose.yml` et test de fumée contre une vraie base en CI. Elle n'a pas encore de PR.
 - **Tests** : environ 60 tests sur `dev` (+8 depuis le dernier RDV). Environ 55 autres attendent sur les branches non fusionnées (44 pour le mode interactif, 10 pour le serveur, 1 pour la base).
 - **Release** : `main` n'a pas bougé depuis le 19/10. La PR de release **0.4.0** (#39) est toujours ouverte, donc il n'y a toujours **pas de publication npm** (la dernière version publiée reste la 0.3.4, de mars).
+- **Performance** : un protocole de benchmark de `convert` est en place, avec une première mesure de 10 à 5 000 modèles (#211, branche `211-perf-benchmark-protocol`, PR vers `dev` en attente de relecture).
 - **Robustesse** : un bug a été trouvé et documenté (#210) : un schéma Prisma avec des valeurs d'attributs très imbriquées provoque un dépassement de pile au lieu d'une erreur de parsing.
 
 ## Bilan des actions prévues au dernier RDV
 
 | Action prévue | Statut | Résumé |
 |---|---|---|
-| Performance : protocole de mesure écrit et committé | ❌ Pas fait | Aucun protocole dans les dépôts |
-| Performance : schémas de tailles croissantes (10 / 100 / 1 000 modèles) | ❌ Pas fait | — |
-| Performance : hyperfine ≥ 20 runs, export versionné, mémoire résidente | ❌ Pas fait | Pas de dossier `benches/` ni de résultats versionnés |
-| Performance : consigner la machine de mesure | ❌ Pas fait | — |
+| Performance : protocole de mesure écrit et committé | ✅ Fait | `benches/README.md` (#211) |
+| Performance : schémas de tailles croissantes (10 / 100 / 1 000 modèles) | ✅ Fait | Générateur déterministe `benches/gen_schema.py`, plus une taille de 5 000 modèles |
+| Performance : hyperfine ≥ 20 runs, export versionné, mémoire résidente | ✅ Fait | 30 runs par taille, exports JSON et Markdown et RSS max dans `benches/results/` |
+| Performance : consigner la machine de mesure | ✅ Fait | `machine.md` généré à chaque mesure |
 | Architecture : versionner les schémas (`.excalidraw` + SVG) | ✅ Fait | Architecture et ER (Excalidraw + SVG + PNG) et schéma DBML versionnés dans `EIP/` sur `main` |
 | Architecture : case « schémas mis à jour » dans le template de PR | ❌ Pas fait | Template de PR inchangé |
 | Architecture : ADR-0005 (licence MIT) | ✅ Fait | Écrit sous le numéro ADR-0007, le 0005 ayant été pris par le framework HTTP |
@@ -62,41 +63,58 @@
 
 - **Licence** : MIT, cohérente partout, et maintenant justifiée par l'ADR-0007 du wiki.
 - **Issues pour débutants** : toujours 0 good first issue sur 128 issues ouvertes. #113 (code mort `bin/transform.js`) et #120 (wiki « Doxygen » → rustdoc) restent candidates. La nouvelle issue #209 (logo) pourrait servir de troisième, pour un contributeur non développeur.
-- **CONTRIBUTING.md** : sans changement.
+- **CONTRIBUTING.md** : une section « Review Rules » résume maintenant les règles de relecture. Le délai de réponse cible et le périmètre de l'ouverture manquent toujours.
 - **Recherche et accueil de contributeurs** : non commencés. Toujours 2 stargazers, 0 fork.
 - **Frein à l'ouverture** : sans release depuis mars, un contributeur externe qui installe le paquet npm récupère une version qui n'a ni le workspace, ni les nouveaux flags, ni le mode serveur.
 
 ## Objectif complémentaire 2 (D) : mesurer, tester et optimiser la performance technique
 
-C'était la priorité annoncée au dernier RDV, et **rien n'a été fait**.
+Les 4 actions prévues sont faites (issue #211). La PR vers `dev` attend une relecture.
 
-- Aucune des 4 actions prévues n'a été faite : pas de protocole, pas de schémas générés, pas de mesure versionnée, pas de relevé de la machine.
-- La seule mesure reste celle du RDV précédent (3,4 ms sur `test.prisma`), non versionnée et non représentative.
-- **Données de performance apparues indirectement** :
-  - la taille du binaire (2,1 → 3,0 Mo), relevée dans l'ADR-0006 ;
-  - le bug #210, qui montre un comportement pathologique sur des entrées profondes.
+- **Protocole écrit** (`benches/README.md`). Il décrit :
+  - la mesure : temps total de `convert --from prisma` en build release, sans la sortie terminal, et mémoire résidente maximale ;
+  - les tailles mesurées ;
+  - les paramètres : 30 runs après 3 runs de chauffe, et 5 mesures de mémoire dont on garde le maximum ;
+  - les conditions de mesure, comment lire et comparer deux mesures, et les limites connues.
+- **Schémas** : un générateur déterministe produit des schémas de 10, 100, 1 000 et 5 000 modèles. Chaque modèle a 12 champs, une relation, deux index et des attributs `@map` / `@db.*` / `@default`. La même taille donne toujours le même fichier, ce qui rend les mesures comparables dans le temps.
+- **Mesure versionnée** : `benches/run.sh` vérifie que la conversion réussit, mesure, puis écrit dans `benches/results/<date>-<commit>/` les exports bruts d'hyperfine, un `summary.md` et un `machine.md` (CPU, RAM, OS, gouverneur CPU, alimentation, versions de rustc et hyperfine, taille du binaire, commit).
+- **Première mesure** (i7-13650HX, 32 Go, sur secteur, commit `0de65ad`) :
 
-  Ces deux points pourraient entrer dans le protocole (taille du binaire suivie à chaque release, schémas profonds en plus des schémas larges).
+  | Modèles | Schéma | Temps moyen ± σ | RSS max |
+  |---:|---:|---:|---:|
+  | 10 | 7,9 Ko | 4,2 ± 0,3 ms | 3,9 Mo |
+  | 100 | 78 Ko | 21,9 ± 1,9 ms | 10,2 Mo |
+  | 1 000 | 782 Ko | 224 ± 8 ms | 75 Mo |
+  | 5 000 | 3,9 Mo | 1,53 ± 0,04 s | 363 Mo |
+
+- **Ce que la mesure montre** :
+  - le temps croît de façon linéaire jusqu'à 1 000 modèles (×10,2 pour ×10 modèles), puis un peu plus vite que linéaire : ×6,8 entre 1 000 et 5 000 modèles, pour ×5 modèles ;
+  - **la mémoire est la vraie limite** : environ 73 Ko par modèle, soit environ **93 fois la taille du schéma**. Les causes probables sont l'arbre pest, l'AST et le pivot gardés en mémoire en même temps, et le JSON construit en entier avant d'être écrit ;
+  - à 10 modèles, les 4 ms sont surtout le démarrage du processus, ce qui confirme que la mesure du RDV précédent sur `test.prisma` ne disait rien du parseur.
+- **Limites** :
+  - les schémas sont synthétiques (pas de vues, de multi-schéma ni d'imbrication profonde, puisque #210 fait planter l'importeur) ;
+  - les chiffres absolus ne valent que pour cette machine ;
+  - il n'y a pas de benchmark en CI, car les runners partagés sont trop bruités.
 - L'axe n'est toujours pas validé avec vous.
 
 ## Questions pour vous
 
 1. Les seuils du problème dur (préservation ≥ 95 %, validité 100 %, 0 % de perte silencieuse) vous semblent-ils réalistes ? Faut-il y ajouter « 0 crash, toujours une erreur de parsing » au vu de #210 ? (question ouverte depuis 2 RDV)
-2. Êtes-vous d'accord avec l'axe de performance proposé : temps d'exécution de `convert` selon la taille du schéma, complété par la taille du binaire ? (question ouverte depuis 2 RDV)
+2. La première mesure montre que la mémoire (environ 93 fois la taille du schéma) limite avant le temps. Faut-il faire de la mémoire l'axe principal d'optimisation, avec un objectif chiffré (par exemple ≤ 20 fois la taille du schéma), plutôt que le temps seul ? (l'axe est une question ouverte depuis 2 RDV)
 3. Les schémas sont versionnés en Excalidraw (source) avec leurs exports SVG et PNG, dans `EIP/`. Ce format vous convient-il, ou attendez-vous du Mermaid rendu directement par GitHub ?
 4. Le binaire a grossi de 43 % avec la couche de persistance. Faut-il déjà placer le serveur derrière une feature Cargo (déclencheur de l'ADR-0004), ou attendre d'avoir une mesure plus complète ?
 
 ## Actions prévues pour dans 3 semaines
 
-- **Performance (priorité, reportée)** :
-  - écrire et committer le protocole de mesure ;
-  - générer des schémas de tailles croissantes (10, 100, 1 000 modèles), plus un schéma profond (cas #210) ;
-  - mesurer avec hyperfine (≥ 20 runs, export versionné), relever la mémoire résidente maximale et la taille du binaire ;
-  - consigner la machine de mesure.
+- **Performance** :
+  - faire relire et fusionner la PR du protocole (#211) ;
+  - profiler la mémoire à 1 000 et 5 000 modèles (par exemple avec heaptrack) pour savoir quelle étape domine : arbre pest, AST ou pivot et JSON ;
+  - fixer un objectif chiffré avec vous, puis tenter une première optimisation et la mesurer avec le même protocole ;
+  - ajouter un schéma profond au protocole une fois #210 corrigé.
 - **Revue et intégration** :
   - relire et fusionner #204 puis #205 ;
   - ouvrir les PR du mode interactif (#48) et de la persistance (#90) ;
-  - fusionner la release 0.4.0 (#39) pour publier sur npm ;
+  - fusionner la release 0.4.0 (#39) pour publier sur npm.
 - **Architecture** :
   - évaluer le déclencheur de l'ADR-0004 (feature Cargo `server`) avant de fusionner #90 ;
   - mettre à jour le diagramme d'architecture avec axum, SeaORM et PostgreSQL ;
