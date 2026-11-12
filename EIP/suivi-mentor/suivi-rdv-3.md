@@ -10,6 +10,12 @@
 - **Tests** : environ 60 tests sur `dev` (+8 depuis le dernier RDV). Environ 55 autres attendent sur les branches non fusionnées (44 pour le mode interactif, 10 pour le serveur, 1 pour la base).
 - **Release** : `main` n'a pas bougé depuis le 19/10. La PR de release **0.4.0** (#39) est toujours ouverte, donc il n'y a toujours **pas de publication npm** (la dernière version publiée reste la 0.3.4, de mars).
 - **Performance** : un protocole de benchmark de `convert` est en place, avec une première mesure de 10 à 5 000 modèles (#211, branche `211-perf-benchmark-protocol`, PR vers `dev` en attente de relecture).
+- **Design** : le travail avance sur Figma :
+  - maquettes de l'interface web : wireframes (#140) et design system (#139) ;
+  - refonte du logo (#209, ouverte le 03/11) et de l'image de marque (#149) ;
+  - nouvelle palette de couleurs.
+
+  Rien n'est encore exporté dans le dépôt : les maquettes et le logo seront versionnés dans `EIP/design/` une fois validés par l'équipe.
 - **Robustesse** : un bug a été trouvé et documenté (#210) : un schéma Prisma avec des valeurs d'attributs très imbriquées provoque un dépassement de pile au lieu d'une erreur de parsing.
 
 ## Bilan des actions prévues au dernier RDV
@@ -111,10 +117,6 @@ Les 4 actions prévues sont faites (issue #211). La PR vers `dev` attend une rel
   - profiler la mémoire à 1 000 et 5 000 modèles (par exemple avec heaptrack) pour savoir quelle étape domine : arbre pest, AST ou pivot et JSON ;
   - fixer un objectif chiffré avec vous, puis tenter une première optimisation et la mesurer avec le même protocole ;
   - ajouter un schéma profond au protocole une fois #210 corrigé.
-- **Revue et intégration** :
-  - relire et fusionner #204 puis #205 ;
-  - ouvrir les PR du mode interactif (#48) et de la persistance (#90) ;
-  - fusionner la release 0.4.0 (#39) pour publier sur npm.
 - **Architecture** :
   - évaluer le déclencheur de l'ADR-0004 (feature Cargo `server`) avant de fusionner #90 ;
   - mettre à jour le diagramme d'architecture avec axum, SeaORM et PostgreSQL ;
@@ -122,3 +124,4 @@ Les 4 actions prévues sont faites (issue #211). La PR vers `dev` attend une rel
 - **Problème dur** (reporté 2 fois) : faire tourner l'importeur Prisma sur `test.prisma`, compter ce qu'une approche naïve gérerait mal, fixer les critères chiffrés, et corriger #210.
 - **Veille** (reportée 2 fois) : définir le rythme et la répartition, puis saisir les premières entrées du journal.
 - **Ouverture** : étiqueter 3 issues good first issue (#113, #120, #209).
+- **Design** : faire valider le logo et la palette par l'équipe, puis versionner les exports (logo, palette, maquettes) dans `EIP/design/`.
