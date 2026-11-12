@@ -24,7 +24,7 @@
 | Architecture : ADR-0005 (licence MIT) | ✅ Fait | Écrit sous le numéro ADR-0007, le 0005 ayant été pris par le framework HTTP |
 | Problème dur : mesure sur `test.prisma`, critères chiffrés | ❌ Pas fait | Reporté pour la 2ᵉ fois |
 | Veille : rythme, répartition, premières entrées | ❌ Pas fait | Reportée pour la 2ᵉ fois ; aucune trace dans les dépôts |
-| Revue de code : accord d'organisation dans `CONTRIBUTING.md` | 🟡 Partiel | Accord du 10/08 versionné dans `EIP/organisation/` ; le lien depuis `CONTRIBUTING.md` attend sa relecture |
+| Revue de code : accord d'organisation dans `CONTRIBUTING.md` | ✅ Fait | Accord du 10/08 versionné dans `EIP/organisation/` ; règles de review résumées dans `CONTRIBUTING.md`, avec un lien vers l'accord |
 | Revue de code : plus de fusion `dev` → `main` sans relecture | ✅ Respecté | Aucune fusion vers `main` sur la période (mais aucune release non plus) |
 | Ouverture : 3 issues good first issue | ❌ Pas fait | Toujours 0 |
 
@@ -54,7 +54,7 @@
 
   Ils sont donc dans le dépôt, dans un format qui se compare d'une version à l'autre. Il reste à mettre le diagramme d'architecture à jour avec les choix de la période (axum, SeaORM, docker-compose), puisqu'il date du 19/10.
 - **Documentation** : le wiki a avancé : une page par flag global (21/10), la documentation du serveur (`--ip`, `--host`, erreurs JSON) et celle du mode interactif (31/10). Les README des branches sont mis à jour avec chaque fonctionnalité.
-- **Revue de code** : la règle tient sur ce qui est fusionné. #203 a été approuvée par un autre membre, et #207 (Dependabot) aussi. En revanche, **#204 et #205 attendent une relecture depuis 12 jours**, et le mode interactif et la persistance (plus de 2 500 et 3 000 lignes) n'ont pas de PR. Le volume de code en attente de relecture est maintenant supérieur à celui fusionné sur la période. L'accord d'organisation n'est toujours pas dans `CONTRIBUTING.md`.
+- **Revue de code** : la règle tient sur ce qui est fusionné. #203 a été approuvée par un autre membre, et #207 (Dependabot) aussi. En revanche, **#204 et #205 attendent une relecture depuis 12 jours**, et le mode interactif et la persistance (plus de 2 500 et 3 000 lignes) n'ont pas de PR. Le volume de code en attente de relecture est maintenant supérieur à celui fusionné sur la période. L'accord d'organisation est maintenant versionné (`EIP/organisation/`), et `CONTRIBUTING.md` résume les règles de review avec un lien vers lui.
 - **CI** : le correctif Dependabot fonctionne. Les PR ciblent `dev` et passent la règle (#207 fusionnée, #208 fermée). La branche de persistance ajoute un service PostgreSQL au job `tests`. Manquent toujours `cargo doc` (#118), la vérification MSRV (#117), devenue plus importante avec `rust-version = 1.94`, et le seuil de couverture (#116).
 - **Tests** : ~60 sur `dev` ; le pourcentage Codecov n'est toujours pas relevé (échéance fin décembre).
 
@@ -97,7 +97,6 @@ C'était la priorité annoncée au dernier RDV, et **rien n'a été fait**.
   - relire et fusionner #204 puis #205 ;
   - ouvrir les PR du mode interactif (#48) et de la persistance (#90) ;
   - fusionner la release 0.4.0 (#39) pour publier sur npm ;
-  - relire et fusionner le lien de `CONTRIBUTING.md` vers l'accord d'organisation.
 - **Architecture** :
   - évaluer le déclencheur de l'ADR-0004 (feature Cargo `server`) avant de fusionner #90 ;
   - mettre à jour le diagramme d'architecture avec axum, SeaORM et PostgreSQL ;
