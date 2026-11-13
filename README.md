@@ -15,7 +15,7 @@ A powerful command-line tool for transforming and managing ORM schemas with ease
 | ✅ | **Prisma import** | Full `schema.prisma` parsing into the pivot (attributes, relations, `@map`/`@@map`, views, createdAt/updatedAt/softDelete/versioning detection) |
 | ✅ | **ORM auto-detection** | Source ORM detected from the file extension, or forced with `--from` |
 | ✅ | **Execution modes** | A single binary with two modes: CLI (default, `--cli`) and server (`--serveur`) |
-| 🚧 | **Global flags** | `--debug`, `--verbose`, `--perf`, `--tts` and `--daltonien` are accepted, but have no effect yet |
+| 🚧 | **Global flags** | `--verbose` (progress steps) and `--debug <LEVEL>` (internal logs) work; `--perf`, `--tts` and `--daltonien` are accepted but have no effect yet |
 | 📋 | **Interactive CLI** | Interactive prompt that shows the ORM detected in the current directory |
 | 📋 | **HTTP server** | REST API served by `--serveur` (currently only logs its startup) |
 | 🚧 | **Drizzle import** | Drizzle schema parsing into the pivot |
@@ -96,6 +96,12 @@ transf-orm convert --from prisma path/to/schema
 # Global flags go before or after the command
 transf-orm --verbose convert schema.prisma
 
+# Show each step on stderr — stdout stays pure JSON, so piping still works
+transf-orm --verbose convert schema.prisma > pivot.json
+
+# Show internal logs up to the given level (on stderr)
+transf-orm --debug debug convert schema.prisma > pivot.json
+
 # Start the server mode on a given port
 transf-orm --serveur --port 8080
 ```
@@ -125,13 +131,15 @@ Global flags apply to both modes and can be placed anywhere on the command line.
 |------|-------------|--------|
 | `--cli` | Run the CLI mode (default when no mode is given) | ✅ |
 | `--serveur` | Run the server mode | ✅ |
-| `--debug <LEVEL>` | Log level: `error`, `warn`, `info`, `debug` or `trace` (case-insensitive) | 🚧 parsed, no effect yet |
-| `--verbose` | Print extra progress information | 🚧 parsed, no effect yet |
+| `--debug <LEVEL>` | Print internal logs on stderr up to `LEVEL`: `error`, `warn`, `info`, `debug` or `trace` (case-insensitive) | ✅ |
+| `--verbose` | Print each step of the command on stderr, prefixed with `[verbose]` | ✅ |
 | `--perf` | Report performance metrics | 🚧 parsed, no effect yet |
 | `--tts` | Read CLI feedback aloud (text-to-speech) | 🚧 parsed, no effect yet |
 | `--daltonien` | Use a colour-blind-friendly palette | 🚧 parsed, no effect yet |
 | `-h`, `--help` | Print help | ✅ |
 | `-V`, `--version` | Print the version | ✅ |
+
+`--verbose` and `--debug` only write to stderr, so the output on stdout (e.g. the JSON pivot) is the same with or without them. Without either flag, nothing extra is printed.
 
 An unknown flag, an invalid `--debug` level or an invalid combination (`--cli` with `--serveur`, `--serveur` with a command, `--port` without `--serveur`) prints an error and exits with code `2`.
 
