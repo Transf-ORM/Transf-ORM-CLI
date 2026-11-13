@@ -71,22 +71,22 @@ pub enum RelationKind {
         junction: JunctionTable,
         /// `true` — the ORM manages the junction table invisibly (Prisma implicit M2M).
         ///
-        /// `false` — the junction table is an explicit [`Table`](super::table::Table)
+        /// `false` — the junction table is an explicit `Table`
         /// in the schema and must be present in [`Schema::tables`](super::Schema::tables).
         implicit: bool,
     },
 }
 
-/// ORM-level relation — the abstraction the ORM adds on top of a [`ForeignKey`].
+/// ORM-level relation — the abstraction the ORM adds on top of a `ForeignKey`.
 ///
-/// Kept separate from [`ForeignKey`] because some ORMs (Drizzle, MikroORM) define
+/// Kept separate from `ForeignKey` because some ORMs (Drizzle, MikroORM) define
 /// relations independently of the database schema, while others (Prisma, TypeORM)
 /// derive both from the same model declaration.
 ///
 /// # Examples
 ///
 /// ```
-/// use transf_orm_core::pivot::relation::{
+/// use transf_orm_core::api::{
 ///     CascadeOptions, JunctionTable, Relation, RelationKind,
 /// };
 ///

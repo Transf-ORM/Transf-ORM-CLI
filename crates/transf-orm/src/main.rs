@@ -1,7 +1,7 @@
 use clap::error::ErrorKind;
 use clap::{CommandFactory, Parser};
 use transf_orm_cli::Command;
-use transf_orm_core::config::{DebugLevel, GlobalConfig};
+use transf_orm_core::api::{DebugLevel, GlobalConfig};
 use transf_orm_server::ServerArgs;
 
 #[derive(Parser)]
