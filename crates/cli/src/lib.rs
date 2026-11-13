@@ -1,6 +1,5 @@
 use clap::Subcommand;
-use transf_orm_core::config::GlobalConfig;
-use transf_orm_core::registry;
+use transf_orm_core::api::{self, GlobalConfig};
 
 /// Commands available in CLI mode.
 #[derive(Subcommand, Debug)]
@@ -39,18 +38,27 @@ fn step(config: &GlobalConfig, message: impl std::fmt::Display) {
 fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<String>) {
     let path_str = path.to_string_lossy();
 
-    let orm = if let Some(name) = from {
+    let (from, orm_display_name) = if let Some(name) = from {
         step(config, format!("Using ORM forced by --from: {name}"));
-        registry::find_by_name(&name).unwrap_or_else(|| {
-            eprintln!(
-                "error: unknown ORM '{name}'. Valid options: {}",
-                registry::names().join(", ")
-            );
-            std::process::exit(1);
-        })
+
+        let supported = api::orm_names();
+
+        let canonical_name = supported
+            .iter()
+            .find(|candidate| candidate.eq_ignore_ascii_case(&name))
+            .unwrap_or_else(|| {
+                eprintln!(
+                    "error: unknown ORM '{name}'. Valid options: {}",
+                    supported.join(", ")
+                );
+                std::process::exit(1);
+            });
+
+        (canonical_name.to_string(), canonical_name.to_string())
     } else {
         step(config, format!("Detecting ORM format for {path_str}"));
-        let detected = registry::detect(&path_str).unwrap_or_else(|| {
+
+        let detected = api::detect(&path).unwrap_or_else(|| {
             eprintln!("error: could not detect ORM format for '{path_str}'");
             eprintln!("Use --from to specify: transf-orm convert --from <orm> {path_str}");
             std::process::exit(1);
@@ -70,47 +78,47 @@ fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<Str
             }
         }
 
-        detected
+        (detected.name.to_owned(), detected.display_name.to_owned())
     };
-    step(config, format!("Source ORM: {}", orm.display_name));
 
-    let make_importer = orm.make_importer.unwrap_or_else(|| {
-        eprintln!("error: {} does not support importing", orm.display_name);
-        std::process::exit(1);
-    });
-
+    step(config, format!("Source ORM: {orm_display_name}"));
     step(config, format!("Reading {path_str}"));
+
     let content = std::fs::read_to_string(&path).unwrap_or_else(|e| {
         eprintln!("error reading {path_str}: {e}");
         std::process::exit(1);
     });
 
-    tracing::debug!(path = %path_str, bytes = content.len(), "read schema file");
+    tracing::debug!(
+        path = %path_str,
+        bytes = content.len(),
+        "read schema file"
+    );
 
     step(
         config,
-        format!("Importing schema with the {} importer", orm.display_name),
+        format!("Importing schema with the {orm_display_name} importer"),
     );
-    match make_importer().import(&content) {
-        Ok(schema) => {
-            step(
-                config,
-                format!(
-                    "Imported {} tables, {} views, {} enums",
-                    schema.tables.len(),
-                    schema.views.len(),
-                    schema.enums.len()
-                ),
-            );
-            step(config, "Writing canonical JSON pivot to stdout");
-            println!(
-                "{}",
-                schema
-                    .to_canonical_json()
-                    .expect("failed to serialize schema to JSON")
-            );
-        }
 
+    let schema = api::import(&content, &from).unwrap_or_else(|e| {
+        eprintln!("error: {e}");
+        std::process::exit(1);
+    });
+
+    step(
+        config,
+        format!(
+            "Imported {} tables, {} views, {} enums",
+            schema.tables.len(),
+            schema.views.len(),
+            schema.enums.len()
+        ),
+    );
+
+    step(config, "Writing canonical JSON pivot to stdout");
+
+    match api::export(&schema, "pivot") {
+        Ok(output) => println!("{output}"),
         Err(e) => {
             eprintln!("error: {e}");
             std::process::exit(1);

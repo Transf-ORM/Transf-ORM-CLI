@@ -1,4 +1,4 @@
-use transf_orm_core::config::GlobalConfig;
+use transf_orm_core::api::GlobalConfig;
 
 /// Flags specific to the server mode.
 #[derive(clap::Args, Debug)]

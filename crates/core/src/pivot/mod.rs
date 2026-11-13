@@ -26,12 +26,7 @@ pub mod table;
 pub mod types;
 pub mod view;
 
-pub use metadata::{OrmKind, OrmMetadata, UnknownFeature};
-pub use procedure::{Function, StoredProcedure, Trigger};
-pub use relation::{ForeignKey, Relation};
-pub use table::{Column, Index, Table};
 pub use types::{ColumnType, DefaultValue, ScalarType};
-pub use view::{MaterializedView, View};
 
 use serde::{Deserialize, Serialize};
 
@@ -144,11 +139,11 @@ pub struct Sequence {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_core::pivot::{DatabaseKind, Schema};
+/// use transf_orm_core::api::{DatabaseKind, Pivot};
 ///
-/// let schema = Schema::new(DatabaseKind::PostgreSql);
+/// let schema = Pivot::new(DatabaseKind::PostgreSql);
 /// let json = schema.to_canonical_json().unwrap();
-/// let restored = Schema::from_json(&json).unwrap();
+/// let restored = Pivot::from_json(&json).unwrap();
 /// assert_eq!(schema, restored);
 /// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
