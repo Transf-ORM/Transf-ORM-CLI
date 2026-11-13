@@ -1,4 +1,3 @@
-
 use clap::Subcommand;
 use transf_orm_core::api::{self, GlobalConfig};
 
@@ -61,9 +60,7 @@ fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<Str
 
         let detected = api::detect(&path).unwrap_or_else(|| {
             eprintln!("error: could not detect ORM format for '{path_str}'");
-            eprintln!(
-                "Use --from to specify: transf-orm convert --from <orm> {path_str}"
-            );
+            eprintln!("Use --from to specify: transf-orm convert --from <orm> {path_str}");
             std::process::exit(1);
         });
 
@@ -75,20 +72,13 @@ fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<Str
 
             let mut input = String::new();
 
-            if std::io::stdin().read_line(&mut input).is_err()
-                || !input.trim().is_empty()
-            {
-                eprintln!(
-                    "Use --from to specify: transf-orm convert --from <orm> {path_str}"
-                );
+            if std::io::stdin().read_line(&mut input).is_err() || !input.trim().is_empty() {
+                eprintln!("Use --from to specify: transf-orm convert --from <orm> {path_str}");
                 std::process::exit(1);
             }
         }
 
-        (
-            detected.name.to_owned(),
-            detected.display_name.to_owned(),
-        )
+        (detected.name.to_owned(), detected.display_name.to_owned())
     };
 
     step(config, format!("Source ORM: {orm_display_name}"));
