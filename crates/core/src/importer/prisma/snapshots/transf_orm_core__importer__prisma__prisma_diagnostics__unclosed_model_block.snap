@@ -1,0 +1,11 @@
+---
+source: crates/core/src/importer/prisma/prisma_diagnostics.rs
+expression: render(input)
+---
+parse error: expected a field, an attribute (`@...`) or attribute arguments, found end of file
+ --> schema.prisma:3:23
+  |
+3 |   email String @unique
+  |                       ^
+  |
+  = help: a `{` block is never closed; add the missing `}`

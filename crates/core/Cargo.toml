@@ -9,3 +9,6 @@ serde.workspace = true
 serde_json.workspace = true
 pest.workspace = true
 pest_derive.workspace = true
+
+[dev-dependencies]
+insta = "1.49.0"

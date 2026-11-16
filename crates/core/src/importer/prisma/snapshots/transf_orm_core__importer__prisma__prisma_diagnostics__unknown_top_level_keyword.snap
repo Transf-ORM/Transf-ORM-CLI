@@ -1,0 +1,9 @@
+---
+source: crates/core/src/importer/prisma/prisma_diagnostics.rs
+expression: render(input)
+---
+parse error: expected a block (`model`, `enum`, `view`, `type`, `datasource` or `generator`), found `modle`
+ --> schema.prisma:5:1
+  |
+5 | modle Post {
+  | ^^^^^

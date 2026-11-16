@@ -1,0 +1,9 @@
+---
+source: crates/core/src/importer/prisma/prisma_diagnostics.rs
+expression: render(input)
+---
+schema error: invalid integer `99999999999999999999`: number too large to fit in target type
+ --> schema.prisma:3:22
+  |
+3 |   value Int @default(99999999999999999999)
+  |                      ^^^^^^^^^^^^^^^^^^^^
