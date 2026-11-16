@@ -10,3 +10,8 @@ clap.workspace = true
 transf-orm-cli = { path = "../cli" }
 transf-orm-core = { path = "../core" }
 transf-orm-server = { path = "../server" }
+
+[dev-dependencies]
+assert_cmd = "2.2.2"
+predicates = "3.1.4"
+serde_json.workspace = true
