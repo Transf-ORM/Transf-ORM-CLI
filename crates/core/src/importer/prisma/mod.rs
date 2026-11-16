@@ -26,8 +26,9 @@ impl super::Importer for PrismaImporter {
 ///
 /// # Errors
 ///
-/// Returns [`ImportError::Parse`] if the input is not valid PSL, or
-/// [`ImportError::Schema`] if the schema is structurally invalid (e.g. a
+/// Returns an [`ImportError`](super::ImportError) of kind
+/// [`Parse`](super::ImportErrorKind::Parse) if the input is not valid PSL, or
+/// [`Schema`](super::ImportErrorKind::Schema) if the schema is structurally invalid (e.g. a
 /// field references a model that does not exist).
 ///
 /// # Examples
@@ -48,7 +49,8 @@ impl super::Importer for PrismaImporter {
 /// assert_eq!(schema.tables[0].name, "User");
 /// ```
 pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
-    let pairs = PrismaParser::parse(Rule::schema, input)?;
+    let pairs =
+        PrismaParser::parse(Rule::schema, input).map_err(|e| parser::syntax_error(e, input))?;
 
     let schema_pair = pairs
         .into_iter()
@@ -134,5 +136,7 @@ pub fn parse_schema(input: &str) -> Result<Schema, super::ImportError> {
     Ok(schema)
 }
 
+#[cfg(test)]
+mod prisma_diagnostics;
 #[cfg(test)]
 mod tests;

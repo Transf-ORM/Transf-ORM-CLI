@@ -1,0 +1,9 @@
+---
+source: crates/core/src/importer/prisma/prisma_diagnostics.rs
+expression: render(input)
+---
+parse error: expected a field type, found `}`
+ --> schema.prisma:7:8
+  |
+7 |   email
+  |        ^

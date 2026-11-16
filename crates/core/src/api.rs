@@ -20,7 +20,7 @@ use crate::registry;
 
 pub use crate::config::{DebugLevel, GlobalConfig};
 pub use crate::exporter::ExportError;
-pub use crate::importer::ImportError;
+pub use crate::importer::{ImportError, ImportErrorKind, SourceLocation};
 pub use crate::pivot::metadata::UnknownFeature;
 pub use crate::pivot::relation::{CascadeOptions, JunctionTable, Relation, RelationKind};
 pub use crate::pivot::types::{DbHint, DefaultFn, LiteralValue};

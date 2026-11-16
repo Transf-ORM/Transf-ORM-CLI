@@ -101,7 +101,10 @@ fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<Str
     );
 
     let schema = api::import(&content, &from).unwrap_or_else(|e| {
-        eprintln!("error: {e}");
+        match e {
+            api::ApiError::Import(e) => eprintln!("{}", e.with_path(path_str.as_ref())),
+            e => eprintln!("error: {e}"),
+        }
         std::process::exit(1);
     });
 
