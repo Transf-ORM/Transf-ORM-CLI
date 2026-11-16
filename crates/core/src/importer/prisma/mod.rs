@@ -34,7 +34,7 @@ impl super::Importer for PrismaImporter {
 /// # Examples
 ///
 /// ```
-/// use transf_orm_core::importer::prisma::parse_schema;
+/// use transf_orm_core::api;
 ///
 /// let input = r#"
 ///   datasource db { provider = "postgresql" url = env("DATABASE_URL") }
@@ -44,7 +44,7 @@ impl super::Importer for PrismaImporter {
 ///   }
 /// "#;
 ///
-/// let schema = parse_schema(input).unwrap();
+/// let schema = api::import(input, "prisma").unwrap();
 /// assert_eq!(schema.tables.len(), 1);
 /// assert_eq!(schema.tables[0].name, "User");
 /// ```

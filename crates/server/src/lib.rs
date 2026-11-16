@@ -5,7 +5,7 @@ use axum::routing::get;
 use axum::{Json, Router};
 use serde_json::{json, Value};
 use tokio::net::TcpListener;
-use transf_orm_core::config::GlobalConfig;
+use transf_orm_core::api::GlobalConfig;
 
 /// Flags specific to the server mode.
 #[derive(clap::Args, Debug)]
