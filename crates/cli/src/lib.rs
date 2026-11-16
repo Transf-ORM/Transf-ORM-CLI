@@ -112,7 +112,7 @@ fn run_convert(config: &GlobalConfig, path: std::path::PathBuf, from: Option<Str
         }
 
         Err(e) => {
-            eprintln!("error: {e}");
+            eprintln!("{}", e.with_path(path_str.as_ref()));
             std::process::exit(1);
         }
     }

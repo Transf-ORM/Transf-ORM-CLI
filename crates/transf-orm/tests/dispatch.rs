@@ -176,6 +176,28 @@ fn verbose_keeps_stdout_unchanged() {
 }
 
 #[test]
+fn parse_error_points_at_offending_line() {
+    let output = run_in_crate(&[
+        "convert",
+        "--from",
+        "prisma",
+        "tests/fixtures/broken.prisma",
+    ]);
+    assert_eq!(output.status.code(), Some(1));
+    assert_eq!(stdout(&output), "");
+    assert_eq!(
+        stderr(&output),
+        "\
+parse error: expected a field type, found `}`
+ --> tests/fixtures/broken.prisma:7:8
+  |
+7 |   email
+  |        ^
+"
+    );
+}
+
+#[test]
 fn no_flag_prints_nothing_on_stderr() {
     let output = run_in_crate(&["convert", VERBOSE_SCHEMA]);
     assert!(output.status.success());
