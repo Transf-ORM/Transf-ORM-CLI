@@ -113,6 +113,44 @@ fn serveur_flag_serves_health() {
 }
 
 #[test]
+fn serveur_host_prints_public_url() {
+    let mut child = Command::new(env!("CARGO_BIN_EXE_transf-orm"))
+        .args([
+            "--serveur",
+            "--ip",
+            "127.0.0.1",
+            "--port",
+            "0",
+            "--host",
+            "api.example.test",
+        ])
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("failed to run the transf-orm binary");
+
+    let mut lines = BufReader::new(child.stderr.take().unwrap()).lines();
+    let listening = lines.next().unwrap().unwrap();
+    let public = lines.next().unwrap().unwrap();
+    child.kill().unwrap();
+    child.wait().unwrap();
+
+    let port = listening
+        .strip_prefix("Listening on http://127.0.0.1:")
+        .unwrap_or_else(|| panic!("unexpected startup line: {listening}"));
+    assert_eq!(
+        public,
+        format!("Public URL: http://api.example.test:{port}")
+    );
+}
+
+#[test]
+fn invalid_ip_exits_with_2() {
+    let output = run(&["--serveur", "--ip", "not-an-ip"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(stderr(&output).contains("--ip"));
+}
+
+#[test]
 fn serveur_port_in_use_exits_with_1() {
     let taken = TcpListener::bind("127.0.0.1:0").unwrap();
     let port = taken.local_addr().unwrap().port().to_string();
@@ -141,6 +179,8 @@ fn conflicting_modes_exit_with_2() {
         Some(2)
     );
     assert_eq!(run(&["--port", "0"]).status.code(), Some(2));
+    assert_eq!(run(&["--ip", "127.0.0.1"]).status.code(), Some(2));
+    assert_eq!(run(&["--host", "example.test"]).status.code(), Some(2));
 }
 
 #[test]
